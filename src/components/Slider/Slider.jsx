@@ -3,47 +3,40 @@ import { Swiper, SwiperSlide } from "swiper/react";
 // Import Swiper styles
 import "swiper/css";
 import "swiper/css/pagination";
-// import required modules
-import { Pagination } from "swiper/modules";
+// Import required modules
+import { Pagination, Navigation, Autoplay } from "swiper/modules";
 
 const Slider = () => {
+  const images = [
+    "https://i.postimg.cc/ZnLKNtgB/sub-banner-Artboard-1.jpg",
+    "https://i.postimg.cc/ZnLKNtgB/sub-banner-Artboard-2.jpg", 
+    "https://i.postimg.cc/ZnLKNtgB/sub-banner-Artboard-3.jpg",
+    "https://i.postimg.cc/ZnLKNtgB/sub-banner-Artboard-4.jpg",
+  ];
+
   return (
     <div>
       <Swiper
         pagination={{
           dynamicBullets: true,
         }}
-        modules={[Pagination]}
-        className="mySwiper h-[90vh]"
+        navigation={true} 
+        autoplay={{
+          delay: 4000, 
+          disableOnInteraction: false, 
+        }}
+        modules={[Pagination, Navigation, Autoplay]} 
+        className="mySwiper h-[50vh]"
       >
-        <SwiperSlide className="">
-          <img
-            src="https://i.postimg.cc/ZnLKNtgB/sub-banner-Artboard-1.jpg"
-            alt=""
-            className="w-full"
-          />
-        </SwiperSlide>
-        <SwiperSlide className="">
-          <img
-            src="https://i.postimg.cc/ZnLKNtgB/sub-banner-Artboard-1.jpg"
-            alt=""
-            className="w-full"
-          />
-        </SwiperSlide>
-        <SwiperSlide className="">
-          <img
-            src="https://i.postimg.cc/ZnLKNtgB/sub-banner-Artboard-1.jpg"
-            alt=""
-            className="w-full"
-          />
-        </SwiperSlide>
-        <SwiperSlide className="">
-          <img
-            src="https://i.postimg.cc/ZnLKNtgB/sub-banner-Artboard-1.jpg"
-            alt=""
-            className="w-full"
-          />
-        </SwiperSlide>
+        {images.map((src, index) => (
+          <SwiperSlide key={index}>
+            <img
+              src={src}
+              alt={`Slide ${index + 1}`}
+              className="w-full h-full object-cover"
+            />
+          </SwiperSlide>
+        ))}
       </Swiper>
     </div>
   );
