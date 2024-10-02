@@ -106,6 +106,7 @@ const Dashboard = () => {
                 title: "Deleted!",
                 text: "Your file has been deleted.",
                 icon: "success",
+                timer: 1500
               });
               refetch();
             }

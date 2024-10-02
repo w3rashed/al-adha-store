@@ -5,6 +5,7 @@ import UserInfo from "../Pages/UserInfo/UserInfo";
 import Dashboard from "../Pages/Dashboard/Dashboard";
 import Login from "../Pages/Login/Login";
 import PrivateRoute from "./PrivateRoute";
+import FristOtp from "../Pages/FristOtp/FristOtp";
 
 export const Router = createBrowserRouter([
   {
@@ -18,6 +19,10 @@ export const Router = createBrowserRouter([
       {
         path: "/userInfo",
         element: <UserInfo></UserInfo>,
+      },
+      {
+        path: "/number-verification",
+        element: <FristOtp></FristOtp>,
       },
       {
         path: "/login",

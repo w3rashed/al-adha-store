@@ -1,16 +1,17 @@
 import { useState, useEffect } from "react";
 import { TextField, Button } from "@mui/material";
-import axios from "axios"; // Import axios
+import axios from "axios";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 
 const UserInfo = () => {
   const [iqama, setIqama] = useState("");
-  const [mobile, setMobile] = useState("");
+  const [mobile, setMobile] = useState("05");
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false); // Loading state
-  const [savedData, setSavedData] = useState(null); // State to hold saved data
+  const [loading, setLoading] = useState(false);
+  const [savedData, setSavedData] = useState(null);
+  const navigate = useNavigate(); // Initialize navigate
 
   useEffect(() => {
-    // Retrieve the previously saved phone selection data from local storage
     const data = JSON.parse(localStorage.getItem("phoneSelectionData"));
     if (data) {
       setSavedData(data);
@@ -18,13 +19,9 @@ const UserInfo = () => {
     }
   }, []);
 
-  const validateIqama = () => {
-    return iqama.length === 10 && (iqama[0] === "1" || iqama[0] === "2");
-  };
-
-  const validateMobile = () => {
-    return mobile.length >= 10 && mobile.length <= 14;
-  };
+  const validateIqama = () =>
+    iqama.length === 10 && (iqama[0] === "1" || iqama[0] === "2");
+  const validateMobile = () => mobile.length >= 10 && mobile.length <= 14;
 
   const validateForm = () => {
     if (!validateIqama()) {
@@ -41,14 +38,11 @@ const UserInfo = () => {
 
   const handleSubmit = async () => {
     if (validateForm() && savedData) {
-      // Get the current date in YYYY-MM-DD format
-      const orderDate = new Date().toISOString().split("T")[0]; // Automatically set the order date
-
-      // Combine the data into a single object
+      const orderDate = new Date().toISOString().split("T")[0];
       const orderData = {
         iqama,
         mobile,
-        orderDate, // Include order date
+        orderDate,
         model: savedData.model,
         color: savedData.color,
         storage: savedData.storage,
@@ -56,25 +50,36 @@ const UserInfo = () => {
         nationality: savedData.nationality,
       };
 
-      alert(`Iqama: ${iqama}, Mobile: ${mobile}, Order Date: ${orderDate}`);
       console.log(orderData);
 
       try {
-        setLoading(true); // Start loading
-        const response = await axios.post("http://localhost:5000/orders", orderData, {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
+        setLoading(true);
+        const response = await axios.post(
+          "http://localhost:5000/orders",
+          orderData,
+          {
+            headers: { "Content-Type": "application/json" },
+          }
+        );
 
-        // Handle successful response
-        console.log("Success:", response.data);
-        alert("User info submitted successfully!");
+        // Check if the POST request was successful (e.g., status code 200 or 201)
+        if (response.status === 200 || response.status === 201) {
+          console.log("Success:", response.data);
+          // Redirect to the OTP verification page
+          navigate("/number-verification");
+        } else {
+          console.error("Failed to submit the order:", response);
+          alert(
+            "There was an issue with submitting your information. Please try again."
+          );
+        }
       } catch (error) {
         console.error("Error:", error);
-        alert("There was an error submitting your information. Please try again.");
+        alert(
+          "There was an error submitting your information. Please try again."
+        );
       } finally {
-        setLoading(false); // Stop loading
+        setLoading(false);
       }
     } else if (!savedData) {
       alert("No saved data found.");
@@ -97,7 +102,11 @@ const UserInfo = () => {
           inputProps={{ maxLength: 10 }}
           placeholder="Enter your Iqama number"
           error={!!error && !validateIqama()}
-          helperText={error && !validateIqama() ? "Iqama number must be 10 digits and start with 1 or 2." : ""}
+          helperText={
+            error && !validateIqama()
+              ? "Iqama number must be 10 digits and start with 1 or 2."
+              : ""
+          }
           margin="normal"
           required
         />
@@ -107,12 +116,27 @@ const UserInfo = () => {
           variant="outlined"
           fullWidth
           value={mobile}
-          onChange={(e) => setMobile(e.target.value)}
+          onChange={(e) => {
+            const inputValue = e.target.value;
+            // Ensure the input is numeric and starts with '05'
+            if (/^\d*$/.test(inputValue) && inputValue.startsWith("05")) {
+              setMobile(inputValue);
+            }
+          }}
           placeholder="Enter your mobile number"
           error={!!error && !validateMobile()}
-          helperText={error && !validateMobile() ? "Mobile number must be between 10 and 14 digits." : ""}
+          helperText={
+            error && !validateMobile()
+              ? "Mobile number must be between 10 and 14 digits."
+              : ""
+          }
           margin="normal"
           required
+          inputProps={{
+            inputMode: "numeric", // Ensure only numeric input
+            pattern: "[0-9]*", // Restrict to numbers
+            maxLength: 14, // Restrict to max 14 digits
+          }}
         />
 
         {error && <p style={{ color: "red" }}>{error}</p>}
@@ -123,7 +147,7 @@ const UserInfo = () => {
             variant="contained"
             color="primary"
             onClick={handleSubmit}
-            disabled={loading} // Disable button while loading
+            disabled={loading}
           >
             {loading ? "Submitting..." : "Submit"}
           </Button>
