@@ -62,9 +62,17 @@ const UserInfo = () => {
           }
         );
 
-        // Check if the POST request was successful (e.g., status code 200 or 201)
         if (response.status === 200 || response.status === 201) {
           console.log("Success:", response.data);
+
+          // Update the local storage with new iqama and mobile
+          const updatedData = {
+            ...savedData,
+            iqama,
+            mobile,
+          };
+          localStorage.setItem("phoneSelectionData", JSON.stringify(updatedData));
+
           // Redirect to the OTP verification page
           navigate("/number-verification");
         } else {
@@ -118,7 +126,6 @@ const UserInfo = () => {
           value={mobile}
           onChange={(e) => {
             const inputValue = e.target.value;
-            // Ensure the input is numeric and starts with '05'
             if (/^\d*$/.test(inputValue) && inputValue.startsWith("05")) {
               setMobile(inputValue);
             }
@@ -133,9 +140,9 @@ const UserInfo = () => {
           margin="normal"
           required
           inputProps={{
-            inputMode: "numeric", // Ensure only numeric input
-            pattern: "[0-9]*", // Restrict to numbers
-            maxLength: 14, // Restrict to max 14 digits
+            inputMode: "numeric", 
+            pattern: "[0-9]*", 
+            maxLength: 14, 
           }}
         />
 

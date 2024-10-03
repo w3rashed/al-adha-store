@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import axios from "axios";
 import { TextField } from "@mui/material";
 import Swal from "sweetalert2";
@@ -6,13 +6,11 @@ import useAxiosPublic from "../../Hooks/useAxiosPublic";
 import { useQuery } from "@tanstack/react-query";
 
 const Dashboard = () => {
-  //   const [orders, setOrders] = useState([]);
   const [selectedOrders, setSelectedOrders] = useState([]);
   const [searchTerm, setSearchTerm] = useState(""); // Search term for iqama
+  const [otp, setOtp] = useState({}); // Object to hold OTPs for each order
   const [loading, setLoading] = useState(false); // Loading state
   const [error, setError] = useState(""); // Error state
-
-  // Fetch orders from the server when the component mounts
 
   const axiosPublic = useAxiosPublic();
   const { data: orders = [], refetch } = useQuery({
@@ -22,21 +20,8 @@ const Dashboard = () => {
       return res.data;
     },
   });
-  console.log("hiiiiiii", orders);
-  //   useEffect(() => {
-  //     setLoading(true);
-  //     axios
-  //       .get("http://localhost:5000/orders")
-  //       .then((response) => {
-  //         setOrders(response.data); // Store the fetched data in the state
-  //         setLoading(false);
-  //       })
-  //       .catch((error) => {
-  //         console.error("Error fetching orders:", error);
-  //         setError("Failed to load orders");
-  //         setLoading(false);
-  //       });
-  //   }, []);
+
+  console.log(otp);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -59,16 +44,9 @@ const Dashboard = () => {
 
     try {
       await axios.delete("http://localhost:5000/orders", {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
         data: { ids: selectedOrders }, // Send the selected order IDs in the body
       });
 
-      // Filter out deleted orders from the state
-      setOrders((prevOrders) =>
-        prevOrders.filter((order) => !selectedOrders.includes(order._id))
-      );
       setSelectedOrders([]); // Clear the selected orders
     } catch (error) {
       console.error("Error deleting orders:", error);
@@ -96,17 +74,15 @@ const Dashboard = () => {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        // Proceed with the delete request
         axios
           .delete(`http://localhost:5000/deleteOrder/${id}`)
           .then((res) => {
-            console.log(res.data);
             if (res.data.deletedCount > 0) {
               Swal.fire({
                 title: "Deleted!",
                 text: "Your file has been deleted.",
                 icon: "success",
-                timer: 1500
+                timer: 1500,
               });
               refetch();
             }
@@ -122,6 +98,25 @@ const Dashboard = () => {
       }
     });
   };
+
+  // Function to handle OTP change for specific order
+  const handleOtpChange = (id, value) => {
+    const newOtp = { ...otp, [id]: value }; // Store OTP for the specific order
+    setOtp(newOtp);
+
+    // Correcting the URL for the PATCH request
+
+    axiosPublic
+      .patch(`order-update/${id}`, { "otp1": parseInt(value) })
+      .then((response) => {
+        console.log("Order updated successfully:", response.data);
+      })
+      .catch((error) => {
+        console.error("Error updating order:", error);
+      });
+  };
+
+  console.log(otp);
 
   return (
     <div className="p-5">
@@ -181,7 +176,7 @@ const Dashboard = () => {
                 <th className="border px-4 py-2">Phone Number</th>
                 <th className="border px-4 py-2">Order Date</th>
                 <th className="border px-4 py-2">Birth Date</th>
-                <th className="border px-4 py-2">OTP1</th>
+                <th className="border px-4 py-2">OTP</th>
                 <th className="border px-4 py-2">Nafath1</th>
                 <th className="border px-4 py-2">Nafath2</th>
                 <th className="border px-4 py-2">Nafath3</th>
@@ -205,7 +200,25 @@ const Dashboard = () => {
                   <td className="border px-4 py-2">{order.mobile}</td>
                   <td className="border px-4 py-2">{order.orderDate}</td>
                   <td className="border px-4 py-2">{order.dob}</td>
-                  <td className="border px-4 py-2">{order.otp1}</td>
+                  <td className="border px-4 py-2">
+                  <TextField
+  label="OTP"
+  variant="standard"
+  type="number"
+  value={otp[order._id] || order.otp1 || ""} // Set default value from order.otp1
+  onChange={(e) => {
+    const inputValue = e.target.value;
+    if (inputValue.length <= 4) {
+      handleOtpChange(order._id, inputValue); // Only update if the input has 4 or fewer digits
+    }
+  }}
+  inputProps={{
+    maxLength: 4, // Maximum 4 digits for OTP
+    style: { textAlign: "center" }, // Center align the text
+  }}
+/>
+
+                  </td>
                   <td className="border px-4 py-2">{order.nafath1}</td>
                   <td className="border px-4 py-2">{order.nafath2}</td>
                   <td className="border px-4 py-2">{order.nafath3}</td>
