@@ -2,6 +2,7 @@ import { FaRegCheckCircle } from "react-icons/fa";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import { FaArrowRightLong } from "react-icons/fa6";
 
 const Products = () => {
   const [model, setModel] = useState("");
@@ -217,7 +218,7 @@ const Products = () => {
 
             {/* Next Button */}
             <button
-              className={`py-2 w-full my-5 rounded-md ${
+              className={`py-2 w-full my-5 rounded-md flex justify-center items-center gap-3 font-bold ${
                 isFormComplete
                   ? "bg-[#14B8A9] hover:bg-[#115752]"
                   : "bg-[#ea3636] hover:bg-[#86291e]"
@@ -225,7 +226,7 @@ const Products = () => {
               onClick={handleNext}
               disabled={!isFormComplete}
             >
-              Next
+              Next <FaArrowRightLong className="mt-1"/>
             </button>
           </div>
         </div>

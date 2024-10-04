@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { TextField, Button } from "@mui/material";
 import axios from "axios";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { FaArrowRightLong } from "react-icons/fa6";
 
 const UserInfo = () => {
   const [iqama, setIqama] = useState("");
@@ -21,7 +22,9 @@ const UserInfo = () => {
 
   const validateIqama = () =>
     iqama.length === 10 && (iqama[0] === "1" || iqama[0] === "2");
-  const validateMobile = () => mobile.length >= 10 && mobile.length <= 14;
+
+  // Updated mobile validation: must be exactly 10 digits and start with "05"
+  const validateMobile = () => mobile.length === 10 && mobile.startsWith("05");
 
   const validateForm = () => {
     if (!validateIqama()) {
@@ -29,7 +32,7 @@ const UserInfo = () => {
       return false;
     }
     if (!validateMobile()) {
-      setError("Mobile number must be between 10 and 14 digits.");
+      setError("Mobile number must be exactly 10 digits and start with '05'.");
       return false;
     }
     setError("");
@@ -38,7 +41,7 @@ const UserInfo = () => {
 
   const handleSubmit = async () => {
     if (validateForm() && savedData) {
-      const orderDate = new Date().toISOString().split("T")[0];
+      const orderDate = new Date().toISOString();
       const orderData = {
         iqama,
         mobile,
@@ -71,7 +74,10 @@ const UserInfo = () => {
             iqama,
             mobile,
           };
-          localStorage.setItem("phoneSelectionData", JSON.stringify(updatedData));
+          localStorage.setItem(
+            "phoneSelectionData",
+            JSON.stringify(updatedData)
+          );
 
           // Redirect to the OTP verification page
           navigate("/number-verification");
@@ -126,7 +132,11 @@ const UserInfo = () => {
           value={mobile}
           onChange={(e) => {
             const inputValue = e.target.value;
-            if (/^\d*$/.test(inputValue) && inputValue.startsWith("05")) {
+            if (
+              /^\d*$/.test(inputValue) &&
+              inputValue.startsWith("05") &&
+              inputValue.length <= 10
+            ) {
               setMobile(inputValue);
             }
           }}
@@ -134,30 +144,28 @@ const UserInfo = () => {
           error={!!error && !validateMobile()}
           helperText={
             error && !validateMobile()
-              ? "Mobile number must be between 10 and 14 digits."
+              ? "Mobile number must be exactly 10 digits and start with '05'."
               : ""
           }
           margin="normal"
           required
           inputProps={{
-            inputMode: "numeric", 
-            pattern: "[0-9]*", 
-            maxLength: 14, 
+            inputMode: "numeric",
+            pattern: "[0-9]*",
+            maxLength: 10, // Restrict to 10 digits
           }}
         />
 
         {error && <p style={{ color: "red" }}>{error}</p>}
 
-        <div className="my-5">
-          <Button
-            className="w-full"
-            variant="contained"
-            color="primary"
+        <div className="flex justify-center mb-5 ">
+          <button
+            className="bg-[#14B8A9] hover:bg-[#115752] text-white px-4 py-2 rounded mt-4 w-full flex justify-center items-center gap-4 text lg:text-md"
             onClick={handleSubmit}
-            disabled={loading}
           >
-            {loading ? "Submitting..." : "Submit"}
-          </Button>
+            <span className="font-bold ">NEXT</span>{" "}
+            <FaArrowRightLong className="mt-1" />
+          </button>
         </div>
       </div>
     </div>

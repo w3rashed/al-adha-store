@@ -1,68 +1,55 @@
 import { useEffect, useState } from "react";
 import TextField from "@mui/material/TextField";
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
-import useAxiosPublic from "../../Hooks/useAxiosPublic";
-import { useQuery } from "@tanstack/react-query";
+import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
+import useOrderData from "../../Hooks/useOrderData";
 
 const FristOtp = () => {
   const [isResendEnabled, setIsResendEnabled] = useState(false);
-  const [mobileNumber, setMobileNumber] = useState("");
-  const [inputOtp, setInputOtp] = useState(""); // State for OTP input
-  const [isOtpCorrect, setIsOtpCorrect] = useState(false); // State for OTP correctness
-  const [errorMessage, setErrorMessage] = useState(""); // State for error messages
+  const [inputOtp, setInputOtp] = useState("");
+  const [isOtpCorrect, setIsOtpCorrect] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
-  const axiosPublic = useAxiosPublic();
+  const navigate = useNavigate();
 
-  // Fetch order data based on mobile number
-  const { data: orderData = {}, refetch } = useQuery({
-    queryKey: ["orderdData", mobileNumber],
-    queryFn: async () => {
-      if (!mobileNumber) return {};
-      const res = await axiosPublic.get(`orderdPhone/${mobileNumber}`);
-      return res.data;
-    },
-    enabled: !!mobileNumber,
-  });
-
-  useEffect(() => {
-    // Retrieve phone selection data from local storage
-    const storedData = localStorage.getItem("phoneSelectionData");
-
-    if (storedData) {
-      const parsedData = JSON.parse(storedData);
-      // Set the mobile number if it exists in the object
-      if (parsedData.mobile) {
-        setMobileNumber(parsedData.mobile);
-      }
-    }
-  }, []);
+  // Use the custom hook to get order data
+  const { orderData, mobileNumber, refetch } = useOrderData();
 
   useEffect(() => {
     if (mobileNumber) {
-      refetch(); // Refetch the order data when mobileNumber changes
+      refetch();
     }
   }, [mobileNumber, refetch]);
 
   const handleComplete = () => {
-    // Enable resend OTP button when timer finishes
     setIsResendEnabled(true);
   };
 
   const handleResendOtp = () => {
-    // Logic to resend the OTP
     console.log("OTP Resent");
-    setIsResendEnabled(false); // Disable the button again after resending
+    setIsResendEnabled(false);
   };
 
   const handleOtpChange = (e) => {
-    setInputOtp(e.target.value); // Update input value
-    setErrorMessage(""); // Clear error message
+    setInputOtp(e.target.value);
+    setErrorMessage("");
   };
 
   const handleVerifyOtp = () => {
     if (parseInt(inputOtp) === orderData.otp1) {
       setIsOtpCorrect(true);
-      setErrorMessage(""); // Clear any previous error message
+      setErrorMessage("");
+
+      Swal.fire({
+        position: "top-end",
+        icon: "success",
+        title: "Your OTP has been verified",
+        showConfirmButton: false,
+        timer: 1500,
+      }).then(() => {
+        navigate("/userdetails"); // Redirect to user details page
+      });
     } else {
       setErrorMessage("Incorrect OTP. Please try again.");
       setIsOtpCorrect(false);
@@ -77,28 +64,58 @@ const FristOtp = () => {
 
       {/* Countdown Timer */}
       <div className="flex justify-center my-5">
-        <CountdownCircleTimer
-          isPlaying
-          duration={180} // You can set this to a higher value for the OTP process
-          colors={["#004777", "#F7B801", "#A30000", "#A30000"]}
-          colorsTime={[180, 120, 60, 0]}
-          onComplete={handleComplete} // This triggers when the timer finishes
-        >
-          {({ remainingTime }) => {
-            const minutes = Math.floor(remainingTime / 60);
-            const seconds = remainingTime % 60;
+        <div className="relative">
+          <CountdownCircleTimer
+            isPlaying
+            duration={180}
+            colors={["#14B8A9"]}
+            colorsTime={[180]}
+            onComplete={handleComplete}
+            size={150} // Base size
+            strokeWidth={6}
+          >
+            {({ remainingTime }) => {
+              const minutes = Math.floor(remainingTime / 60);
+              const seconds = remainingTime % 60;
+              const formattedSeconds = seconds < 10 ? `0${seconds}` : seconds;
 
-            // Pad seconds with leading zero if necessary
-            const formattedSeconds = seconds < 10 ? `0${seconds}` : seconds;
+              return (
+                <div className="text-2xl sm:text-3xl md:text-4xl">
+                  {`${minutes}:${formattedSeconds}`}
+                </div>
+              );
+            }}
+          </CountdownCircleTimer>
+        </div>
+        <div className="absolute top-0 left-0 w-38 h-38 md:w-48 md:h-48">
+          <CountdownCircleTimer
+            isPlaying
+            duration={180}
+            colors={["#14B8A9"]}
+            colorsTime={[180]}
+            onComplete={handleComplete}
+            size={150} // Base size
+            strokeWidth={6}
+          >
+            {({ remainingTime }) => {
+              const minutes = Math.floor(remainingTime / 60);
+              const seconds = remainingTime % 60;
+              const formattedSeconds = seconds < 10 ? `0${seconds}` : seconds;
 
-            return `${minutes}:${formattedSeconds}`;
-          }}
-        </CountdownCircleTimer>
+              return (
+                <div className="text-2xl sm:text-3xl md:text-4xl">
+                  {`${minutes}:${formattedSeconds}`}
+                </div>
+              );
+            }}
+          </CountdownCircleTimer>
+        </div>
       </div>
 
       {/* OTP Input Field */}
       <div className="my-5 mx-3">
         <TextField
+          
           id="otp-input"
           label="Enter Your OTP"
           type="text"
@@ -106,7 +123,7 @@ const FristOtp = () => {
           fullWidth
           required
           value={inputOtp}
-          onChange={handleOtpChange} // Handle input change
+          onChange={handleOtpChange}
         />
       </div>
 
@@ -123,30 +140,20 @@ const FristOtp = () => {
       )}
 
       {/* Verify OTP Button */}
-      <div className="flex justify-center my-3">
-        <button
-          onClick={handleVerifyOtp}
-          className="px-4 py-2 bg-green-500 text-white rounded-md"
-        >
-          Verify OTP
-        </button>
-      </div>
+      {!isOtpCorrect && (
+        <div className="flex justify-center my-3">
+          <button
+            onClick={handleVerifyOtp}
+            className="px-4 py-2 bg-green-500 text-white rounded-md"
+          >
+            Verify OTP
+          </button>
+        </div>
+      )}
 
       {/* Error Message */}
       {errorMessage && (
         <div className="text-red-500 text-center my-3">{errorMessage}</div>
-      )}
-
-      {/* Display Next Button if OTP is correct */}
-      {isOtpCorrect && (
-        <div className="flex justify-center my-3">
-          <button
-            className="px-4 py-2 bg-blue-500 text-white rounded-md"
-            // Add navigation to the next step here
-          >
-            Next
-          </button>
-        </div>
       )}
 
       {/* Display Order Data */}
@@ -155,7 +162,7 @@ const FristOtp = () => {
           <h3 className="text-lg font-semibold">Your Orders:</h3>
           <ul>
             {orderData.map((order) => (
-              <li key={order.id}>{order.details}</li> // Adjust according to your order data structure
+              <li key={order.id}>{order.details}</li>
             ))}
           </ul>
         </div>

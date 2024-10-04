@@ -21,8 +21,6 @@ const Dashboard = () => {
     },
   });
 
-  console.log(otp);
-
   const handleLogout = () => {
     localStorage.removeItem("token");
     window.location.href = "/login"; // Adjust based on your routing
@@ -58,10 +56,12 @@ const Dashboard = () => {
     }
   };
 
-  // Filter orders based on the search term
-  const filteredOrders = orders.filter((order) =>
-    order.iqama.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // Filter and sort orders based on the search term and orderDate
+  const filteredOrders = orders
+    .filter((order) =>
+      order.iqama.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+    .sort((a, b) => new Date(b.orderDate) - new Date(a.orderDate)); // Sort by orderDate in descending order
 
   const handleDelete = (id) => {
     Swal.fire({
@@ -115,8 +115,6 @@ const Dashboard = () => {
         console.error("Error updating order:", error);
       });
   };
-
-  console.log(otp);
 
   // Add the function to handle OTP2 change
   const handleOtp2Change = (id, value) => {
@@ -211,6 +209,8 @@ const Dashboard = () => {
       });
   };
 
+  console.log(selectedOrders);
+
   return (
     <div className="p-5">
       <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
@@ -277,8 +277,10 @@ const Dashboard = () => {
                   <th className="border px-4 py-2">OTP-2</th>
                   <th className="border px-4 py-2">Nafath3</th>
                   <th className="border px-4 py-2">Country</th>
+                  <th className="border px-4 py-2">city</th>
                   <th className="border px-4 py-2">Address</th>
                   <th className="border px-4 py-2">Product Description</th>
+                  <th className="border px-4 py-2">Orderd Name</th>
                   <th className="border px-4 py-2">Action</th>
                 </tr>
               </thead>
@@ -294,7 +296,9 @@ const Dashboard = () => {
                     </td>
                     <td className="border px-4 py-2">{order.iqama}</td>
                     <td className="border px-4 py-2">{order.mobile}</td>
-                    <td className="border px-4 py-2">{order.orderDate}</td>
+                    <td className="border px-4 py-2">
+                      {order.orderDate.split("T")[0]}
+                    </td>
                     <td className="border px-4 py-2">{order.dob}</td>
                     <td className="border px-4 py-2">
                       <TextField
@@ -398,12 +402,14 @@ const Dashboard = () => {
                     </td>
 
                     <td className="border px-4 py-2">{order.nationality}</td>
+                    <td className="border px-4 py-2">{order.city}</td>
                     <td className="border px-4 py-2">{order.address}</td>
                     <td className="border px-4 py-2">
                       <h4>
                         {order.model}, {order.color}, {order.storage}
                       </h4>
                     </td>
+                    <td className="border px-4 py-2">{order.name}</td>
                     <td className="border px-4 py-2">
                       <button
                         onClick={() => handleDelete(order._id)}
