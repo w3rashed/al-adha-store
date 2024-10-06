@@ -8,7 +8,7 @@ import { FaArrowRight } from "react-icons/fa";
 import { FaArrowRightLong } from "react-icons/fa6";
 
 const UserDetails = () => {
-  const { orderData, refetch } = useOrderData();
+  const { lastOrder, refetch } = useOrderData();
   const axiosPublic = useAxiosPublic();
   const navigate = useNavigate(); // Initialize useNavigate
 
@@ -31,7 +31,7 @@ const UserDetails = () => {
   // Handle next button click
   const handleNext = async () => {
     try {
-      await axiosPublic.patch(`order-update/${orderData._id}`, formData);
+      await axiosPublic.patch(`order-update/${lastOrder._id}`, formData);
       Swal.fire("Success", "Order updated successfully", "success");
       refetch(); // Refetch data after successful update
 
@@ -70,13 +70,13 @@ const UserDetails = () => {
           }}
           sx={{
             "& input[type=number]": {
-              "-moz-appearance": "textfield", // Firefox hides arrows
-              "-webkit-appearance": "none", // Chrome/Safari hides arrows
-              appearance: "textfield", // Fallback for others
+              "-moz-appearance": "textfield", 
+              "-webkit-appearance": "none", 
+              appearance: "textfield", 
             },
             "& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button":
               {
-                "-webkit-appearance": "none", // Hide arrows in Chrome
+                "-webkit-appearance": "none",
                 margin: 0,
               },
           }}

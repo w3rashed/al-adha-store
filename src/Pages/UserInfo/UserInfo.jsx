@@ -3,6 +3,7 @@ import { TextField, Button } from "@mui/material";
 import axios from "axios";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
 import { FaArrowRightLong } from "react-icons/fa6";
+import useAxiosPublic from "../../Hooks/useAxiosPublic";
 
 const UserInfo = () => {
   const [iqama, setIqama] = useState("");
@@ -11,6 +12,8 @@ const UserInfo = () => {
   const [loading, setLoading] = useState(false);
   const [savedData, setSavedData] = useState(null);
   const navigate = useNavigate(); // Initialize navigate
+
+  const axiosPublic = useAxiosPublic();
 
   useEffect(() => {
     const data = JSON.parse(localStorage.getItem("phoneSelectionData"));
@@ -57,13 +60,9 @@ const UserInfo = () => {
 
       try {
         setLoading(true);
-        const response = await axios.post(
-          "http://localhost:5000/orders",
-          orderData,
-          {
-            headers: { "Content-Type": "application/json" },
-          }
-        );
+        const response = await axiosPublic.post("orders", orderData, {
+          headers: { "Content-Type": "application/json" },
+        });
 
         if (response.status === 200 || response.status === 201) {
           console.log("Success:", response.data);

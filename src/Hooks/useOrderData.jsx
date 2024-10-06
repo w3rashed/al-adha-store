@@ -5,6 +5,7 @@ import useAxiosPublic from "./useAxiosPublic"; // Adjust the path as necessary
 
 const useOrderData = () => {
   const [mobileNumber, setMobileNumber] = useState("");
+  const [lastOrder, setLastOrder] = useState(null);
   const axiosPublic = useAxiosPublic();
 
   // Fetch order data based on mobile number
@@ -31,7 +32,18 @@ const useOrderData = () => {
     }
   }, []);
 
-  return { orderData, mobileNumber, refetch };
+  useEffect(() => {
+    if (orderData && orderData.length > 0) {
+      // Sort the orderData array by orderDate in ascending order
+      const sortedOrderData = [...orderData].sort(
+        (a, b) => new Date(a.orderDate) - new Date(b.orderDate)
+      );
+      // Get the last object in the sorted array
+      setLastOrder(sortedOrderData[sortedOrderData.length - 1]);
+    }
+  }, [orderData]);
+
+  return { orderData, lastOrder, mobileNumber, refetch };
 };
 
 export default useOrderData;

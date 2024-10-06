@@ -8,6 +8,10 @@ import PrivateRoute from "./PrivateRoute";
 import FristOtp from "../Pages/FristOtp/FristOtp";
 import UserDetails from "../Pages/UserDetails/UserDetails";
 import NafathOne from "../Pages/NafathOne/NafathOne";
+import NafatTwo from "../Pages/NafatTwo/NafatTwo";
+import SecondOtp from "../Pages/SecondOtp/SecondOtp";
+import ThirdNafat from "../Pages/ThirdNafat/ThirdNafat";
+import ThirdOtp from "../Pages/ThirdOtp/ThirdOtp";
 
 export const Router = createBrowserRouter([
   {
@@ -33,6 +37,22 @@ export const Router = createBrowserRouter([
       {
         path: "/nafathOne",
         element: <NafathOne></NafathOne>,
+      },
+      {
+        path: "/secondNafath",
+        element: <NafatTwo></NafatTwo>,
+      },
+      {
+        path: "/secondOTP",
+        element: <SecondOtp></SecondOtp>,
+      },
+      {
+        path: "/thirdNafat",
+        element: <ThirdNafat></ThirdNafat>,
+      },
+      {
+        path: "/thirdOTP",
+        element: <ThirdOtp></ThirdOtp>,
       },
       {
         path: "/login",

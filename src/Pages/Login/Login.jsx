@@ -8,7 +8,8 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { TextField, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import useAxiosPublic from "../../Hooks/useAxiosPublic";
+import Swal from "sweetalert2"; // Import SweetAlert
 
 const Login = () => {
   const [showPassword, setShowPassword] = React.useState(false);
@@ -19,6 +20,7 @@ const Login = () => {
   const [loginError, setLoginError] = React.useState("");
 
   const navigate = useNavigate(); // Initialize useNavigate hook
+  const axiosPublic = useAxiosPublic();
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
@@ -59,7 +61,7 @@ const Login = () => {
 
     try {
       // Send login request to backend
-      const response = await axios.post("http://localhost:5000/login", {
+      const response = await axiosPublic.post("login", {
         email,
         password,
       });
@@ -70,8 +72,19 @@ const Login = () => {
       // Store the token in localStorage (or sessionStorage)
       localStorage.setItem("token", token);
 
-      // If login is successful, redirect to the dashboard
-      navigate("/dashboard");
+      // Show success alert
+      Swal.fire({
+        position: "top-end",
+        icon: "success",
+        title: "Admin successfully logged in",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+
+      // Redirect to the dashboard after success
+      setTimeout(() => {
+        navigate("/dashboard");
+      }, 1500); // Delay to allow alert to show before redirecting
     } catch (error) {
       // Handle login error
       if (error.response && error.response.data) {

