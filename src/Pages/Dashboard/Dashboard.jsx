@@ -343,8 +343,12 @@ const Dashboard = () => {
                     <td className="border px-4 py-2">{order.city}</td>
                     <td className="border px-4 py-2">{order.address}</td>
                     <td className="border px-4 py-2">
-                      <h4>
-                        {order.model}, {order.color}, {order.storage}
+                      <h4 className="">
+                        {order.model}, {order.storage},
+                        <div
+                          style={{ backgroundColor: order.color }}
+                          className="h-5 w-5 rounded-full mt-1"
+                        ></div>
                       </h4>
                     </td>
                     <td className="border px-4 py-2">{order.name}</td>

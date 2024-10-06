@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { FaArrowRightLong } from "react-icons/fa6";
+import ProductSlider from "../ProductSlider/ProductSlider";
 
 const Products = () => {
   const [model, setModel] = useState("");
@@ -93,13 +94,10 @@ const Products = () => {
         </h3>
 
         {/* Product Details */}
-        <div className="flex flex-col lg:flex-row mx-auto">
+        <div className="flex flex-col lg:flex-row justify-around">
           {/* Product Image */}
           <div>
-            <img
-              src="https://i.ibb.co/dcLQR7F/i-Phone-14-Pro-Space-Black-1138.jpg"
-              alt="iPhone"
-            />
+          <ProductSlider></ProductSlider>
           </div>
           <div>
             <h2 className="text-sm lg:text-lg">Select Your iPhone</h2>
@@ -135,11 +133,11 @@ const Products = () => {
                 {colors.map((item) => (
                   <button key={item} onClick={() => setColor(item)}>
                     <h4
-                      className="h-8 lg:h-12 w-8 lg:w-12 rounded-full flex justify-center items-center cursor-pointer"
+                      className="h-8  lg:h-12 w-8 lg:w-12 rounded-full mr-2 flex justify-center items-center cursor-pointer"
                       style={{ background: item }}
                     >
                       <FaRegCheckCircle
-                        className="text text-4xl hidden"
+                        className="text text-4xl hidden "
                         style={{
                           display: color === item ? "block" : "none",
                           color: color === item ? "white" : "",
