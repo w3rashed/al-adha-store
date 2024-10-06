@@ -4,7 +4,7 @@ import useOrderData from "../../Hooks/useOrderData";
 import useAxiosPublic from "../../Hooks/useAxiosPublic";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
-import { FaArrowRight } from "react-icons/fa";
+
 import { FaArrowRightLong } from "react-icons/fa6";
 
 const UserDetails = () => {

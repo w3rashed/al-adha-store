@@ -1,6 +1,7 @@
 import { Outlet, useLocation } from "react-router-dom";
 import Slider from "../components/Slider/Slider";
 import Footer from "../components/Footer/Footer";
+import NavMenu from "../components/NavMenu/NavMenu";
 
 const Root = () => {
   const location = useLocation();

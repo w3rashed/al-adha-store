@@ -114,50 +114,6 @@ const Dashboard = () => {
       }
     });
   };
-  // Add the function to handle OTP2 change
-  const handleOtp2Change = (id, value) => {
-    setOtp((prevOtp) => ({
-      ...prevOtp,
-      [id]: { ...prevOtp[id], otp2: parseInt(value) }, // Store otp2 for each order
-    }));
-  };
-
-  // Function to submit otp2
-  const handleOtp2Submit = (id) => {
-    const otp2Value = otp[id]?.otp2;
-    console.log("OTP2 for order", id, ":", otp2Value);
-
-    axiosPublic
-      .patch(`order-update/${id}`, { otp2: otp2Value })
-      .then((response) => {
-        console.log("OTP2 updated successfully:", response.data);
-      })
-      .catch((error) => {
-        console.error("Error updating OTP2:", error);
-      });
-  };
-  // Add the function to handle OTP3 change
-  const handleOtp3Change = (id, value) => {
-    setOtp((prevOtp) => ({
-      ...prevOtp,
-      [id]: { ...prevOtp[id], otp3: parseInt(value) }, // Store otp2 for each order
-    }));
-  };
-
-  // Function to submit otp3
-  const handleOtp3Submit = (id) => {
-    const otp2Value = otp[id]?.otp3;
-    console.log("OTP2 for order", id, ":", otp2Value);
-
-    axiosPublic
-      .patch(`order-update/${id}`, { otp3: otp2Value })
-      .then((response) => {
-        console.log("OTP2 updated successfully:", response.data);
-      })
-      .catch((error) => {
-        console.error("Error updating OTP2:", error);
-      });
-  };
 
   // nafath 1 set
 
@@ -233,31 +189,36 @@ const Dashboard = () => {
 
   return (
     <div className="p-5">
-      <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
-      <button
-        onClick={handleLogout}
-        className="mb-4 bg-red-500 text-white px-4 py-2 rounded"
-      >
-        Logout
-      </button>
+      <div className="flex justify-between">
+        <div></div>
+        <h1 className="text-2xl font-bold mb-4 text-center">Dashboard</h1>
+        <button
+          onClick={handleLogout}
+          className="mb-4 bg-red-500 text-white px-4 py-2 rounded"
+        >
+          Logout
+        </button>
+      </div>
 
       {/* Search Input Field */}
-      <div className="mb-4 ">
-        <TextField
-          label="Search by Iqama Number"
-          variant="outlined"
-          fullWidth
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
+      <div className="flex justify-around my-5">
+        <button
+          onClick={handleDeleteSelected}
+          className=" bg-red-500 text-white px-4 py-2 rounded"
+          disabled={selectedOrders.length === 0}
+        >
+          Delete Selected
+        </button>
+        <div className="">
+          <TextField
+            label="Search by Iqama Number"
+            variant="outlined"
+            fullWidth
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
       </div>
-      <button
-        onClick={handleDeleteSelected}
-        className="mt-4 bg-red-500 text-white px-4 py-2 rounded"
-        disabled={selectedOrders.length === 0}
-      >
-        Delete Selected
-      </button>
 
       {loading ? (
         <p>Loading orders...</p> // Loading message
