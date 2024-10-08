@@ -69,7 +69,7 @@ const Dashboard = () => {
     if (!confirmDelete) return;
 
     try {
-      await axiosPublic.delete("orders", {
+      await axiosPublic.delete("deleteOrder", {
         data: { ids: selectedOrders }, // Send the selected order IDs in the body
       });
 
@@ -89,7 +89,7 @@ const Dashboard = () => {
     .filter((order) =>
       order.iqama.toLowerCase().includes(searchTerm.toLowerCase())
     )
-    .sort((a, b) => new Date(b.orderDate) - new Date(a.orderDate)); // Sort by orderDate in descending order
+    .sort((a, b) => new Date(b.orderDate) - new Date(a.orderDate));
 
   const handleDelete = (id) => {
     Swal.fire({

@@ -4,6 +4,7 @@ import { CountdownCircleTimer } from "react-countdown-circle-timer";
 import { useNavigate } from "react-router-dom";
 import useOrderData from "../../Hooks/useOrderData";
 import useAxiosPublic from "../../Hooks/useAxiosPublic";
+import Swal from "sweetalert2";
 const ThirdOtp = () => {
   // State for OTP input and error message
   const [otp, setOtp] = useState("");
@@ -41,7 +42,15 @@ const ThirdOtp = () => {
       .patch(`order-update/${id}`, { otp3: otp })
       .then((response) => {
         console.log("OTP2 updated successfully:", response.data);
-        navigate("/");
+        Swal.fire({
+          position: "top-center",
+          icon: "success",
+          title: "Succesfully complete tour order",
+          showConfirmButton: false,
+          timer: 1500,
+        }).then(() => {
+          navigate("/");
+        });
       })
       .catch((error) => {
         console.error("Error updating OTP1:", error);
