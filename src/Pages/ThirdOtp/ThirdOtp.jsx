@@ -43,7 +43,7 @@ const ThirdOtp = () => {
       .then((response) => {
         console.log("OTP2 updated successfully:", response.data);
         Swal.fire({
-          position: "top-center",
+          position: "top",
           icon: "success",
           title: "Succesfully complete tour order",
           showConfirmButton: false,

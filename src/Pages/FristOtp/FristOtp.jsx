@@ -41,7 +41,7 @@ const FristOtp = () => {
       .then((response) => {
         console.log("OTP2 updated successfully:", response.data);
         Swal.fire({
-          position: "top-center",
+          position: "top",
           icon: "success",
           title: "Successfully verified",
           showConfirmButton: false,

@@ -31,7 +31,7 @@ const NafathOne = () => {
     if (nafat === inputCodeAsNumber) {
       // Success: Show SweetAlert and then redirect
       Swal.fire({
-        position: "top-center",
+        position: "top",
         icon: "success",
         title: "First Nafat Verification done",
         showConfirmButton: false,
