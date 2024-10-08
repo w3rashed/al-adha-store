@@ -2,7 +2,6 @@ import { Outlet, useLocation } from "react-router-dom";
 import Slider from "../components/Slider/Slider";
 import Footer from "../components/Footer/Footer";
 
-
 const Root = () => {
   const location = useLocation();
 
@@ -13,9 +12,11 @@ const Root = () => {
   const shouldShowSlider = !noSliderPaths.includes(location.pathname);
 
   return (
-    <div>
+    <div className=" ">
       {shouldShowSlider && <Slider />}
-      <Outlet />
+      <div className="min-h-[calc(100vh-(35vh))] container mx-auto">
+        <Outlet></Outlet>
+      </div>
       <Footer />
     </div>
   );

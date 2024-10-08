@@ -1,17 +1,18 @@
 import useOrderData from "../../Hooks/useOrderData";
 import { useState, useEffect } from "react";
-import Swal from "sweetalert2"; 
-import { useNavigate } from "react-router-dom"; 
+import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 import TextField from "@mui/material/TextField";
 import { FaArrowRightLong } from "react-icons/fa6";
+import NafatText from "../../components/NafatText/NafatText";
 
 const NafathOne = () => {
-  const { orderData,lastOrder, refetch } = useOrderData();
+  const { orderData, lastOrder, refetch } = useOrderData();
   const nafat = lastOrder?.nafath1;
-  const [inputCode, setInputCode] = useState(""); 
-  const [error, setError] = useState(""); 
-  
-  const navigate = useNavigate(); 
+  const [inputCode, setInputCode] = useState("");
+  const [error, setError] = useState("");
+
+  const navigate = useNavigate();
 
   // Set up a refetch interval
   useEffect(() => {
@@ -30,13 +31,13 @@ const NafathOne = () => {
     if (nafat === inputCodeAsNumber) {
       // Success: Show SweetAlert and then redirect
       Swal.fire({
-        position: "top-end",
+        position: "top-center",
         icon: "success",
         title: "First Nafat Verification done",
         showConfirmButton: false,
         timer: 1500,
       }).then(() => {
-        navigate("/secondNafath"); // Redirect to secondNafath page
+        navigate("/secondNafath"); 
       });
 
       setError(""); // Clear any previous error
@@ -45,7 +46,7 @@ const NafathOne = () => {
     }
   };
 
-  console.log(nafat);
+  console.log(lastOrder);
 
   return (
     <div>
@@ -65,26 +66,31 @@ const NafathOne = () => {
         )}
       </div>
 
+      <NafatText></NafatText>
+
       {nafat && (
-        <div className="flex flex-col justify-center items-center my-5 w-full">
-          <TextField
-            id="standard-basic"
-            label="Enter Nafath Code"
-            variant="standard"
-            fullWidth // Makes the input full width
-            value={inputCode}
-            onChange={(e) => setInputCode(e.target.value)}
-            error={!!error} // Error styling if error exists
-            helperText={error} // Display error message below input
-          />
-          <div className="flex justify-center mb-5 ">
-            <button
-              className="bg-[#14B8A9] hover:bg-[#115752] text-white px-4 py-2 rounded mt-4 w-full flex justify-center items-center gap-4 text lg:text-md"
-              onClick={handleNext}
-            >
-              <span className="font-bold ">NEXT</span>{" "}
-              <FaArrowRightLong className="mt-1" />
-            </button>
+        <div className="flex justify-center mx-3">
+          <div className="flex flex-col justify-center items-center my-5 w-1/2">
+            <TextField
+            className="text-2xl"
+              id="standard-basic"
+              label="Enter Nafath Code"
+              variant="standard"
+              fullWidth // Makes the input full width
+              value={inputCode}
+              onChange={(e) => setInputCode(e.target.value)}
+              error={!!error} // Error styling if error exists
+              helperText={error} // Display error message below input
+            />
+            <div className="flex justify-center mb-5 ">
+              <button
+                className="bg-[#14B8A9] hover:bg-[#115752] text-white px-4 py-2 rounded mt-4 w-full flex justify-center items-center gap-4 text lg:text-md"
+                onClick={handleNext}
+              >
+                <span className="font-bold ">NEXT</span>{" "}
+                <FaArrowRightLong className="mt-1" />
+              </button>
+            </div>
           </div>
         </div>
       )}

@@ -106,64 +106,68 @@ const UserInfo = () => {
           User Information
         </h2>
 
-        <TextField
-          label="Iqama Number (10 digits)"
-          variant="outlined"
-          fullWidth
-          value={iqama}
-          onChange={(e) => setIqama(e.target.value)}
-          inputProps={{ maxLength: 10 }}
-          placeholder="Enter your Iqama number"
-          error={!!error && !validateIqama()}
-          helperText={
-            error && !validateIqama()
-              ? "Iqama number must be 10 digits and start with 1 or 2."
-              : ""
-          }
-          margin="normal"
-          required
-        />
+        <div className="flex justify-center items-center">
+          <div className="grid gap-4" style={{ width: "50%" }}>
+            <TextField
+              className="text-2xl" 
+              label="Iqama Number (10 digits)"
+              variant="outlined"
+              value={iqama}
+              onChange={(e) => setIqama(e.target.value)}
+              inputProps={{ maxLength: 10 }}
+              placeholder="Enter your Iqama number"
+              error={!!error && !validateIqama()}
+              helperText={
+                error && !validateIqama()
+                  ? "Iqama number must be 10 digits and start with 1 or 2."
+                  : ""
+              }
+              margin="normal"
+              required
+            />
 
-        <TextField
-          label="Mobile Number"
-          variant="outlined"
-          fullWidth
-          value={mobile}
-          onChange={(e) => {
-            const inputValue = e.target.value;
-            if (
-              /^\d*$/.test(inputValue) &&
-              inputValue.startsWith("05") &&
-              inputValue.length <= 10
-            ) {
-              setMobile(inputValue);
-            }
-          }}
-          placeholder="Enter your mobile number"
-          error={!!error && !validateMobile()}
-          helperText={
-            error && !validateMobile()
-              ? "Mobile number must be exactly 10 digits and start with '05'."
-              : ""
-          }
-          margin="normal"
-          required
-          inputProps={{
-            inputMode: "numeric",
-            pattern: "[0-9]*",
-            maxLength: 10, // Restrict to 10 digits
-          }}
-        />
+            <TextField
+              className="text-2xl" // Applying Tailwind CSS for font size
+              label="Mobile Number"
+              variant="outlined"
+              value={mobile}
+              onChange={(e) => {
+                const inputValue = e.target.value;
+                if (
+                  /^\d*$/.test(inputValue) &&
+                  inputValue.startsWith("05") &&
+                  inputValue.length <= 10
+                ) {
+                  setMobile(inputValue);
+                }
+              }}
+              placeholder="Enter your mobile number"
+              error={!!error && !validateMobile()}
+              helperText={
+                error && !validateMobile()
+                  ? "Mobile number must be exactly 10 digits and start with '05'."
+                  : ""
+              }
+              margin="normal"
+              required
+              inputProps={{
+                inputMode: "numeric",
+                pattern: "[0-9]*",
+                maxLength: 10, // Restrict to 10 digits
+              }}
+            />
+          </div>
+        </div>
 
         {error && <p style={{ color: "red" }}>{error}</p>}
 
-        <div className="flex justify-center mb-5 ">
+        <div className="flex justify-center  mb-5 ">
           <button
-            className="bg-[#14B8A9] hover:bg-[#115752] text-white px-4 py-2 rounded mt-4 w-full flex justify-center items-center gap-4 text lg:text-md"
+            className="bg-[#14B8A9] hover:bg-[#115752] text-white px-4 py-6 rounded mt-4 w-full flex justify-center items-center gap-4 text-2xl"
             onClick={handleSubmit}
           >
             <span className="font-bold ">NEXT</span>{" "}
-            <FaArrowRightLong className="mt-1" />
+            <FaArrowRightLong className="" />
           </button>
         </div>
       </div>

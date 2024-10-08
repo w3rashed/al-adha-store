@@ -1,9 +1,10 @@
-import {  useState } from "react";
+import { useState } from "react";
 import TextField from "@mui/material/TextField";
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
 import { useNavigate } from "react-router-dom";
 import useOrderData from "../../Hooks/useOrderData";
 import useAxiosPublic from "../../Hooks/useAxiosPublic";
+import Swal from "sweetalert2";
 
 const FristOtp = () => {
   // State for OTP input and error message
@@ -11,7 +12,7 @@ const FristOtp = () => {
   const [isOtpCorrect, setIsOtpCorrect] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
-  const { orderData, lastOrder, refetch } = useOrderData();
+  const { lastOrder } = useOrderData();
 
   const axiosPublic = useAxiosPublic();
   const id = lastOrder?._id;
@@ -22,11 +23,11 @@ const FristOtp = () => {
     const value = e.target.value;
 
     // Allow only digits and limit to 4 characters
-    if (/^\d{0,4}$/.test(value)) {
+    if (/^\d{0,8}$/.test(value)) {
       setOtp(value);
 
       // Check if the OTP has 4 digits
-      if (value.length === 4) {
+      if (value.length === 8) {
         setIsOtpCorrect(true); // Show Verify OTP button
       } else {
         setIsOtpCorrect(false); // Hide Verify OTP button
@@ -34,14 +35,18 @@ const FristOtp = () => {
     }
   };
 
-  console.log(orderData);
-  // Handle OTP verification (log the OTP value to the console)
   const handleVerifyOtp = () => {
-    console.log("Entered OTP:", otp);
     axiosPublic
       .patch(`order-update/${id}`, { otp1: otp })
       .then((response) => {
         console.log("OTP2 updated successfully:", response.data);
+        Swal.fire({
+          position: "top-center",
+          icon: "success",
+          title: "Successfully verified",
+          showConfirmButton: false,
+          timer: 1500,
+        });
         navigate("/userDetails");
       })
       .catch((error) => {
@@ -50,8 +55,8 @@ const FristOtp = () => {
   };
 
   return (
-    <div>
-      <h2 className="text-center text-4xl font-bold text-gray-700">
+    <div className=" container mx-auto">
+      <h2 className="text-center text-4xl font-bold text-gray-700 my-5">
         Number Verification
       </h2>
 
@@ -80,18 +85,21 @@ const FristOtp = () => {
       </div>
 
       {/* OTP Input Field */}
-      <div className="my-5 mx-3">
-        <TextField
-          id="otp-input"
-          label="Enter Your OTP"
-          type="text"
-          variant="standard"
-          fullWidth
-          required
-          value={otp}
-          onChange={handleOtpChange}
-          inputProps={{ maxLength: 4 }} // Limit input to 4 digits
-        />
+      <div className="lg:flex justify-center my-5 mx-3">
+        <div className=" lg:w-1/2">
+          <TextField
+            className="text-2xl"
+            id="otp-input"
+            label="Enter Your OTP"
+            type="text"
+            variant="standard"
+            fullWidth
+            required
+            value={otp}
+            onChange={handleOtpChange}
+            inputProps={{ maxLength: 8 }}
+          />
+        </div>
       </div>
 
       {/* Verify OTP Button (only visible when 4 digits are entered) */}

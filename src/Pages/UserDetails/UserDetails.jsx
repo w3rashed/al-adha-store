@@ -32,10 +32,8 @@ const UserDetails = () => {
   const handleNext = async () => {
     try {
       await axiosPublic.patch(`order-update/${lastOrder._id}`, formData);
-      Swal.fire("Success", "Order updated successfully", "success");
-      refetch(); // Refetch data after successful update
 
-      // Redirect to nafath1 page after successful update
+      refetch();
       navigate("/nafathOne");
     } catch (error) {
       console.error("Error updating order:", error);
@@ -44,12 +42,13 @@ const UserDetails = () => {
   };
 
   return (
-    <div className="mx-3">
+    <div className="mx-3 mb-10 lg:mb-0">
       <h3 className="text-center text-4xl font-bold text-gray-700 my-5">
         User Details
       </h3>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 my-5">
         <TextField
+          className="text-2xl"
           name="name"
           label="Please Enter Your Name"
           variant="standard"
@@ -58,8 +57,9 @@ const UserDetails = () => {
           onChange={handleInputChange}
         />
         <TextField
+          className="text-2xl"
           name="salary"
-          label="Please Enter Your Salary in Number"
+          label="Please Enter Your current income monthly"
           variant="standard"
           required
           value={formData.salary}
@@ -70,9 +70,9 @@ const UserDetails = () => {
           }}
           sx={{
             "& input[type=number]": {
-              "-moz-appearance": "textfield", 
-              "-webkit-appearance": "none", 
-              appearance: "textfield", 
+              "-moz-appearance": "textfield",
+              "-webkit-appearance": "none",
+              appearance: "textfield",
             },
             "& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button":
               {
@@ -82,6 +82,7 @@ const UserDetails = () => {
           }}
         />
         <TextField
+          className="text-2xl"
           name="city"
           label="Please Enter City"
           variant="standard"
@@ -90,6 +91,7 @@ const UserDetails = () => {
           onChange={handleInputChange}
         />
         <TextField
+          className="text-2xl"
           name="address"
           label="Please Enter Your Full Address"
           variant="standard"
@@ -100,11 +102,11 @@ const UserDetails = () => {
       </div>
       <div className="flex justify-center mb-5 ">
         <button
-          className="bg-[#14B8A9] hover:bg-[#115752] text-white px-4 py-2 rounded mt-4 w-full flex justify-center items-center gap-4 text lg:text-md "
+          className="bg-[#14B8A9] hover:bg-[#115752] text-white px-4 py-2 rounded mt-4 w-full flex justify-center items-center gap-4 text-2xl "
           onClick={handleNext}
         >
           <span className="font-bold ">NEXT</span>{" "}
-          <FaArrowRightLong className="mt-1" />
+          <FaArrowRightLong className="mt-1 " />
         </button>
       </div>
     </div>

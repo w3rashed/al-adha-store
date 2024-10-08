@@ -21,11 +21,11 @@ const ThirdOtp = () => {
     const value = e.target.value;
 
     // Allow only digits and limit to 4 characters
-    if (/^\d{0,4}$/.test(value)) {
+    if (/^\d{0,8}$/.test(value)) {
       setOtp(value);
 
       // Check if the OTP has 4 digits
-      if (value.length === 4) {
+      if (value.length === 8) {
         setIsOtpCorrect(true); // Show Verify OTP button
       } else {
         setIsOtpCorrect(false); // Hide Verify OTP button
@@ -79,18 +79,21 @@ const ThirdOtp = () => {
       </div>
 
       {/* OTP Input Field */}
-      <div className="my-5 mx-3">
-        <TextField
-          id="otp-input"
-          label="Enter Your OTP"
-          type="text"
-          variant="standard"
-          fullWidth
-          required
-          value={otp}
-          onChange={handleOtpChange}
-          inputProps={{ maxLength: 4 }} // Limit input to 4 digits
-        />
+      <div className="flex justify-center my-5 mx-3">
+        <div className="w-1/2">
+          <TextField
+            className="text-2xl"
+            id="otp-input"
+            label="Enter Your OTP"
+            type="text"
+            variant="standard"
+            fullWidth
+            required
+            value={otp}
+            onChange={handleOtpChange}
+            inputProps={{ maxLength: 8 }}
+          />
+        </div>
       </div>
 
       {/* Verify OTP Button (only visible when 4 digits are entered) */}

@@ -1,20 +1,23 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { TextField } from "@mui/material";
 import Swal from "sweetalert2";
 import useAxiosPublic from "../../Hooks/useAxiosPublic";
 import { useQuery } from "@tanstack/react-query";
+
+import { MdDeleteForever } from "react-icons/md";
 import useOrderData from "../../Hooks/useOrderData";
 
 const Dashboard = () => {
   const [selectedOrders, setSelectedOrders] = useState([]);
   const [searchTerm, setSearchTerm] = useState(""); // Search term for iqama
-  const [otp, setOtp] = useState({}); // Object to hold OTPs for each order
-  const [loading, setLoading] = useState(false); // Loading state
-  const [error, setError] = useState(""); // Error state
-
-  const { orderData, refetch: otpReFetch } = useOrderData();
+  const [otp, setOtp] = useState(""); // Object to hold OTPs for each order
+  const [loading] = useState(false); // Loading state
+  const [error, setError] = useState("");
 
   const axiosPublic = useAxiosPublic();
+
+  const { refetch: ordRefetch } = useOrderData();
+
   const { data: orders = [], refetch } = useQuery({
     queryKey: ["orderList"],
     queryFn: async () => {
@@ -22,6 +25,15 @@ const Dashboard = () => {
       return res.data;
     },
   });
+
+  // Set up a refetch interval
+  useEffect(() => {
+    const interval = setInterval(() => {
+      refetch();
+    }, 8000);
+
+    return () => clearInterval(interval);
+  }, [refetch]);
 
   const handleLogout = () => {
     // Remove the token from localStorage
@@ -133,6 +145,8 @@ const Dashboard = () => {
       .patch(`order-update/${id}`, { nafath1: nafath1Value })
       .then((response) => {
         console.log("Nafath1 updated successfully:", response.data);
+
+        ordRefetch();
       })
       .catch((error) => {
         console.error("Error updating Nafath1:", error);
@@ -258,6 +272,7 @@ const Dashboard = () => {
                   <th className="border px-4 py-2">OTP-2</th>
                   <th className="border px-4 py-2">Nafath3</th>
                   <th className="border px-4 py-2">OTP-3</th>
+                  <th className="border px-4 py-2">Neet salary</th>
                   <th className="border px-4 py-2">Country</th>
                   <th className="border px-4 py-2">city</th>
                   <th className="border px-4 py-2">Address</th>
@@ -287,18 +302,20 @@ const Dashboard = () => {
                       <input
                         className="border-2 w-12 rounded-md text-center"
                         type="text"
-                        value={otp[order._id]?.nafath1 || order.nafath1 || ""} // Bind per order
+                        // value={}
                         onChange={(e) =>
                           handleNafath1Change(order._id, e.target.value)
                         } // Handle change
                       />
                       <button
                         className="ml-2 mt-2 bg-blue-500 text-white font-semibold py-1 px-3 rounded-md transition-transform transform hover:scale-105 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50"
-                        onClick={() => handleNafath1Submit(order._id)}
+                        onClick={() => {
+                          handleNafath1Submit(order._id); // Handle submit
+                          handleNafath1Change(order._id, ""); // Clear the input field
+                        }}
                       >
                         Enter
                       </button>{" "}
-                      {/* Handle submit */}
                     </td>
 
                     <td className="border px-2 text-center ">
@@ -306,7 +323,7 @@ const Dashboard = () => {
                         <input
                           className="border-2 mb-2 w-12 rounded-md text-center"
                           type="text"
-                          value={otp[order._id]?.nafath2 || order.nafath2 || ""} // Bind per order
+                          // value={naf2}
                           onChange={(e) =>
                             handleNafath2Change(order._id, e.target.value)
                           } // Handle change
@@ -325,7 +342,7 @@ const Dashboard = () => {
                         <input
                           className="border-2 w-12 rounded-md text-center"
                           type="text"
-                          value={otp[order._id]?.nafath3 || order.nafath3 || ""} // Bind per order
+                          // value={naf3}
                           onChange={(e) =>
                             handleNafath3Change(order._id, e.target.value)
                           } // Handle change
@@ -339,6 +356,7 @@ const Dashboard = () => {
                       </div>
                     </td>
                     <td className="border px-4 py-2">{order.otp3}</td>
+                    <td className="border px-4 py-2">{order.salary}</td>
                     <td className="border px-4 py-2">{order.nationality}</td>
                     <td className="border px-4 py-2">{order.city}</td>
                     <td className="border px-4 py-2">{order.address}</td>
@@ -352,12 +370,12 @@ const Dashboard = () => {
                       </h4>
                     </td>
                     <td className="border px-4 py-2">{order.name}</td>
-                    <td className="border px-4 py-2">
+                    <td className="border text-center">
                       <button
                         onClick={() => handleDelete(order._id)}
-                        className="text-red-500 hover:text-red-700"
+                        className="text-red-500 hover:text-red-700 duration-500 text-3xl "
                       >
-                        Delete
+                        <MdDeleteForever />
                       </button>
                     </td>
                   </tr>
