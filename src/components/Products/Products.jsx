@@ -94,13 +94,13 @@ const Products = () => {
         </h3>
 
         {/* Product Details */}
-        <div className="flex flex-col lg:flex-row justify-around">
+        <div className="flex flex-col lg:flex-row justify-around mt-5">
           {/* Product Image */}
-          <div>
+          <div className="lg:ml-20">
             <ProductSlider></ProductSlider>
           </div>
-          <div className="mx-auto">
-            <h2 className="text-3xl font-semibold">Select Your iPhone</h2>
+          <div className="mx-auto ">
+            <h2 className="text-3xl lg:text-2xl font-semibold ">Select Your iPhone</h2>
 
             {/* Model Selection */}
             <div className="flex my-5  gap-8">
@@ -108,7 +108,7 @@ const Products = () => {
               <div className="grid grid-cols-3 gap-">
                 {models.map((item) => (
                   <button
-                    className="text-2xl"
+                    className="text-2xl lg:text-base"
                     key={item}
                     onClick={() => setModel(item)}
                     style={{
@@ -158,7 +158,7 @@ const Products = () => {
                   <button
                     key={item}
                     onClick={() => setStorage(item)}
-                    className="text-2xl"
+                    className="text-2xl lg:text-base"
                     style={{
                       backgroundColor: storage === item ? "#0D9488" : "",
                       color: storage === item ? "white" : "black",
@@ -177,8 +177,8 @@ const Products = () => {
 
             {/* Date of Birth Selection */}
             <div>
-              <label className="text-2xl font-semibold">
-                Date of Birth:
+              <label className=" flex items-center">
+                <p className="text-2xl font-semibold">Date of Birth:</p>
                 <input
                   className="ml-2 border-[1px] border-black px-4 py-2 rounded-md"
                   type="date"
@@ -191,8 +191,8 @@ const Products = () => {
 
             {/* Nationality Selection */}
             <div>
-              <label className="flex items-center mt-1 text-2xl font-semibold">
-                <h4 className="">Nationality:</h4>
+              <label className="flex items-center mt-1 ">
+                <h4 className="text-2xl font-semibold">Nationality:</h4>
                 <select
                   className="border-[1px] border-black rounded-md py-2 px-4 my-5 ml-5"
                   value={nationality}
@@ -218,7 +218,7 @@ const Products = () => {
 
             {/* Next Button */}
             <button
-              className={`py-6 w-full my-5 rounded-md flex justify-center items-center gap-3 font-bold text-2xl ${
+              className={`py-6 lg:py-2 w-full my-5 rounded-md flex justify-center items-center gap-3 font-bold text-2xl ${
                 isFormComplete
                   ? "bg-[#14B8A9] hover:bg-[#115752]"
                   : "bg-[#ea3636] hover:bg-[#86291e]"

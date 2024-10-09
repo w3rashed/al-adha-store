@@ -41,7 +41,7 @@ const Dashboard = () => {
 
     // Show success alert
     Swal.fire({
-      position: "top-end",
+      position: "top",
       icon: "success",
       title: "Admin logout Successfully",
       showConfirmButton: false,
@@ -127,8 +127,110 @@ const Dashboard = () => {
     });
   };
 
-  // nafath 1 set
+  // otp1
+  const handleOtp1Change = (id, value) => {
+    setOtp((prevOtp) => ({
+      ...prevOtp,
+      [id]: { ...prevOtp[id], otp1: parseInt(value) }, // Store otp1 for each order
+    }));
+  };
 
+  const handleOtp1Submit = (id) => {
+    const otp1Value = otp[id]?.otp1;
+    console.log("otp1 for order", id, ":", otp1Value);
+
+    // Send this value to the server as needed
+    axiosPublic
+      .patch(`order-update/${id}`, { otp1: otp1Value })
+      .then((response) => {
+        console.log("otp1 updated successfully:", response.data);
+
+        // Clear the input field after successful submission
+        handleOtp1Change(id, "");
+
+        ordRefetch();
+        Swal.fire({
+          position: "top",
+          icon: "success",
+          title: "Your data ensert Successfully",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      })
+      .catch((error) => {
+        console.error("Error updating otp1:", error);
+      });
+  };
+  // otp2
+  const handleOtp2Change = (id, value) => {
+    setOtp((prevOtp) => ({
+      ...prevOtp,
+      [id]: { ...prevOtp[id], otp2: parseInt(value) }, // Store otp1 for each order
+    }));
+  };
+
+  const handleOtp2Submit = (id) => {
+    const otp2Value = otp[id]?.otp2;
+    console.log("otp2 for order", id, ":", otp2Value);
+
+    // Send this value to the server as needed
+    axiosPublic
+      .patch(`order-update/${id}`, { otp2: otp2Value })
+      .then((response) => {
+        console.log("otp2 updated successfully:", response.data);
+
+        // Clear the input field after successful submission
+        handleOtp2Change(id, "");
+
+        ordRefetch();
+        Swal.fire({
+          position: "top",
+          icon: "success",
+          title: "Your data ensert Successfully",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      })
+      .catch((error) => {
+        console.error("Error updating otp2:", error);
+      });
+  };
+  // otp3
+  const handleOtp3Change = (id, value) => {
+    setOtp((prevOtp) => ({
+      ...prevOtp,
+      [id]: { ...prevOtp[id], otp3: parseInt(value) }, // Store otp1 for each order
+    }));
+  };
+
+  const handleOtp3Submit = (id) => {
+    const otp3Value = otp[id]?.otp3;
+    console.log("otp2 for order", id, ":", otp3Value);
+
+    // Send this value to the server as needed
+    axiosPublic
+      .patch(`order-update/${id}`, { otp3: otp3Value })
+      .then((response) => {
+        console.log("otp3 updated successfully:", response.data);
+
+        // Clear the input field after successful submission
+        handleOtp3Change(id, "");
+
+        ordRefetch();
+        Swal.fire({
+          position: "top",
+          icon: "success",
+          title: "Your data ensert Successfully",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      })
+      .catch((error) => {
+        console.error("Error updating otp3:", error);
+      });
+  };
+
+  // nafath 1 set
   const handleNafath1Change = (id, value) => {
     setOtp((prevOtp) => ({
       ...prevOtp,
@@ -140,13 +242,23 @@ const Dashboard = () => {
     const nafath1Value = otp[id]?.nafath1;
     console.log("Nafath1 for order", id, ":", nafath1Value);
 
-    // You can then send this value to the server as needed
+    // Send this value to the server as needed
     axiosPublic
       .patch(`order-update/${id}`, { nafath1: nafath1Value })
       .then((response) => {
         console.log("Nafath1 updated successfully:", response.data);
 
+        // Clear the input field after successful submission
+        handleNafath1Change(id, "");
+
         ordRefetch();
+        Swal.fire({
+          position: "top",
+          icon: "success",
+          title: "Your data ensert Successfully",
+          showConfirmButton: false,
+          timer: 1500,
+        });
       })
       .catch((error) => {
         console.error("Error updating Nafath1:", error);
@@ -170,6 +282,16 @@ const Dashboard = () => {
       .patch(`order-update/${id}`, { nafath2: nafath2Value })
       .then((response) => {
         console.log("Nafath2 updated successfully:", response.data);
+
+        // Clear the input field after successful submission
+        handleNafath2Change(id, "");
+        Swal.fire({
+          position: "top",
+          icon: "success",
+          title: "Your data ensert Successfully",
+          showConfirmButton: false,
+          timer: 1500,
+        });
       })
       .catch((error) => {
         console.error("Error updating Nafath2:", error);
@@ -193,6 +315,16 @@ const Dashboard = () => {
       .patch(`order-update/${id}`, { nafath3: nafath3Value })
       .then((response) => {
         console.log("Nafath3 updated successfully:", response.data);
+
+        // Clear the input field after successful submission
+        handleNafath3Change(id, "");
+        Swal.fire({
+          position: "top",
+          icon: "success",
+          title: "Your data ensert Successfully",
+          showConfirmButton: false,
+          timer: 1500,
+        });
       })
       .catch((error) => {
         console.error("Error updating Nafath3:", error);
@@ -297,65 +429,114 @@ const Dashboard = () => {
                       {order.orderDate.split("T")[0]}
                     </td>
                     <td className="border px-4 py-2">{order.dob}</td>
-                    <td className="border px-4 py-2">{order.otp1}</td>
+
+                    {/* otp1 */}
                     <td className="border px-2 text-center">
                       <input
                         className="border-2 w-12 rounded-md text-center"
                         type="text"
-                        // value={}
+                        value={otp[order._id]?.otp1 || ""} // Bind the input value to state
+                        onChange={(e) =>
+                          handleOtp1Change(order._id, e.target.value)
+                        } // Handle change
+                      />
+                      <button
+                        className="ml-2 mt-2 bg-blue-500 text-white font-semibold py-1 px-3 rounded-md transition-transform transform hover:scale-105 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50"
+                        onClick={() => handleOtp1Submit(order._id)} // Handle submit
+                      >
+                        Enter
+                      </button>
+                    </td>
+                    {/* nafath 1 */}
+                    <td className="border px-2 text-center">
+                      <input
+                        className="border-2 w-12 rounded-md text-center"
+                        type="text"
+                        value={otp[order._id]?.nafath1 || ""} // Bind the input value to state
                         onChange={(e) =>
                           handleNafath1Change(order._id, e.target.value)
                         } // Handle change
                       />
                       <button
                         className="ml-2 mt-2 bg-blue-500 text-white font-semibold py-1 px-3 rounded-md transition-transform transform hover:scale-105 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50"
-                        onClick={() => {
-                          handleNafath1Submit(order._id); // Handle submit
-                          handleNafath1Change(order._id, ""); // Clear the input field
-                        }}
+                        onClick={() => handleNafath1Submit(order._id)} // Handle submit
                       >
                         Enter
-                      </button>{" "}
+                      </button>
                     </td>
-
+                    {/* natat 2 */}
                     <td className="border px-2 text-center ">
-                      <div className=" items-center justify-center space-x-2">
+                      <div className="items-center justify-center space-x-2">
                         <input
                           className="border-2 mb-2 w-12 rounded-md text-center"
                           type="text"
-                          // value={naf2}
+                          value={otp[order._id]?.nafath2 || ""} // Bind the input value to state
                           onChange={(e) =>
                             handleNafath2Change(order._id, e.target.value)
                           } // Handle change
                         />
                         <button
                           className="bg-blue-500 text-white font-semibold py-1 px-3 rounded-md transition-transform transform hover:scale-105 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50"
-                          onClick={() => handleNafath2Submit(order._id)}
+                          onClick={() => handleNafath2Submit(order._id)} // Handle submit
                         >
                           Enter
                         </button>
                       </div>
                     </td>
-                    <td className="border px-4 py-2">{order.otp2}</td>
+
+                    {/* otp2 */}
+                    <td className="border px-2 text-center">
+                      <input
+                        className="border-2 w-12 rounded-md text-center"
+                        type="text"
+                        value={otp[order._id]?.otp2 || ""}
+                        onChange={(e) =>
+                          handleOtp2Change(order._id, e.target.value)
+                        } // Handle change
+                      />
+                      <button
+                        className="ml-2 mt-2 bg-blue-500 text-white font-semibold py-1 px-3 rounded-md transition-transform transform hover:scale-105 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50"
+                        onClick={() => handleOtp2Submit(order._id)}
+                      >
+                        Enter
+                      </button>
+                    </td>
                     <td className="border px-2 text-center">
                       <div className="items-center justify-center space-x-2">
                         <input
                           className="border-2 w-12 rounded-md text-center"
                           type="text"
-                          // value={naf3}
+                          value={otp[order._id]?.nafath3 || ""} // Bind the input value to state
                           onChange={(e) =>
                             handleNafath3Change(order._id, e.target.value)
                           } // Handle change
                         />
                         <button
                           className="mt-2 bg-blue-500 text-white font-semibold py-1 px-3 rounded-md transition-transform transform hover:scale-105 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50"
-                          onClick={() => handleNafath3Submit(order._id)}
+                          onClick={() => handleNafath3Submit(order._id)} // Handle submit
                         >
                           Enter
                         </button>
                       </div>
                     </td>
-                    <td className="border px-4 py-2">{order.otp3}</td>
+
+                    {/* otp2 */}
+                    <td className="border px-2 text-center">
+                      <input
+                        className="border-2 w-12 rounded-md text-center"
+                        type="text"
+                        value={otp[order._id]?.otp3 || ""}
+                        onChange={(e) =>
+                          handleOtp3Change(order._id, e.target.value)
+                        } // Handle change
+                      />
+                      <button
+                        className="ml-2 mt-2 bg-blue-500 text-white font-semibold py-1 px-3 rounded-md transition-transform transform hover:scale-105 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50"
+                        onClick={() => handleOtp3Submit(order._id)}
+                      >
+                        Enter
+                      </button>
+                    </td>
                     <td className="border px-4 py-2">{order.salary}</td>
                     <td className="border px-4 py-2">{order.nationality}</td>
                     <td className="border px-4 py-2">{order.city}</td>
