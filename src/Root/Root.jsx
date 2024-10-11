@@ -14,10 +14,14 @@ const Root = () => {
   return (
     <div className=" ">
       {shouldShowSlider && <Slider />}
-      <div className="min-h-[calc(100vh-(35vh))] container mx-auto">
-        <Outlet></Outlet>
+      <div className="min-h-[calc(100vh-20vh)] flex flex-col">
+        <div className="">
+          <Outlet></Outlet>
+        </div>
+        <div className="mt-auto">
+        <Footer />
+        </div>
       </div>
-      <Footer />
     </div>
   );
 };
