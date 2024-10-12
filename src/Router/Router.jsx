@@ -12,6 +12,7 @@ import NafatTwo from "../Pages/NafatTwo/NafatTwo";
 import SecondOtp from "../Pages/SecondOtp/SecondOtp";
 import ThirdNafat from "../Pages/ThirdNafat/ThirdNafat";
 import ThirdOtp from "../Pages/ThirdOtp/ThirdOtp";
+import UpdatePass from "../Pages/UpdatePass/UpdatePass";
 
 export const Router = createBrowserRouter([
   {
@@ -63,6 +64,14 @@ export const Router = createBrowserRouter([
         element: (
           <PrivateRoute>
             <Dashboard></Dashboard>
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/reset-admin-password",
+        element: (
+          <PrivateRoute>
+            <UpdatePass></UpdatePass>
           </PrivateRoute>
         ),
       },

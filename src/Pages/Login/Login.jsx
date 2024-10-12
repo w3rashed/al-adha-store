@@ -74,7 +74,7 @@ const Login = () => {
 
       // Show success alert
       Swal.fire({
-        position: "top-end",
+        position: "top",
         icon: "success",
         title: "Admin successfully logged in",
         showConfirmButton: false,

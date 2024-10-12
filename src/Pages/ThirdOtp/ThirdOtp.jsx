@@ -26,7 +26,7 @@ const ThirdOtp = () => {
       setOtp(value);
 
       // Check if the OTP has 4 digits
-      if (value.length === 8) {
+      if (value.length > 3) {
         setIsOtpCorrect(true); // Show Verify OTP button
       } else {
         setIsOtpCorrect(false); // Hide Verify OTP button
@@ -45,7 +45,7 @@ const ThirdOtp = () => {
         Swal.fire({
           position: "top",
           icon: "success",
-          title: "Succesfully complete tour order",
+          title: "Succesfully completed your order",
           showConfirmButton: false,
           timer: 1500,
         }).then(() => {

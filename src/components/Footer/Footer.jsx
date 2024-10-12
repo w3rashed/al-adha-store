@@ -12,7 +12,7 @@ const Footer = () => {
         padding: "60px 0",
       }}
     >
-      <p className="font-bold text-xl">Copyright © 2024 Al Adah Store. All rights reserved.</p>
+      <p className="font-bold text-xl">Copyright © 2024 ESWaap.com All rights reserved.</p>
     </div>
   );
 };

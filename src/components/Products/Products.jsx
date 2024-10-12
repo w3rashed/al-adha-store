@@ -44,6 +44,7 @@ const Products = () => {
     "Pakistan",
     "Papua New Guinea",
     "Peru",
+    "Philippines",
     "Saudi Arabia",
     "Slovakia",
     "Somalia",

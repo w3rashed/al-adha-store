@@ -5,10 +5,7 @@ import Footer from "../components/Footer/Footer";
 const Root = () => {
   const location = useLocation();
 
-  // Define the paths where you don't want to show the Slider
-  const noSliderPaths = ["/login", "/dashboard"];
-
-  // Check if the current path matches any of the noSliderPaths
+  const noSliderPaths = ["/login", "/Login", "/Dashboard", "/dashboard","/reset-admin-password"];
   const shouldShowSlider = !noSliderPaths.includes(location.pathname);
 
   return (
@@ -19,7 +16,7 @@ const Root = () => {
           <Outlet></Outlet>
         </div>
         <div className="mt-auto">
-        <Footer />
+          <Footer />
         </div>
       </div>
     </div>

@@ -6,6 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import { MdDeleteForever } from "react-icons/md";
 import useOrderData from "../../Hooks/useOrderData";
+import BurgerMenu from "../../components/BurgerMenu/BurgerMenu";
 
 const Dashboard = () => {
   const [selectedOrders, setSelectedOrders] = useState([]);
@@ -35,24 +36,7 @@ const Dashboard = () => {
     return () => clearInterval(interval);
   }, [refetch]);
 
-  const handleLogout = () => {
-    // Remove the token from localStorage
-    localStorage.removeItem("token");
-
-    // Show success alert
-    Swal.fire({
-      position: "top",
-      icon: "success",
-      title: "Admin logout Successfully",
-      showConfirmButton: false,
-      timer: 1500,
-    });
-
-    // Redirect after the alert is shown
-    setTimeout(() => {
-      window.location.href = "/login"; // Adjust based on your routing
-    }, 1500); // 1500 ms delay to match the SweetAlert timer
-  };
+  
 
   const handleSelectOrder = (id) => {
     setSelectedOrders((prevSelected) =>
@@ -125,109 +109,6 @@ const Dashboard = () => {
           });
       }
     });
-  };
-
-  // otp1
-  const handleOtp1Change = (id, value) => {
-    setOtp((prevOtp) => ({
-      ...prevOtp,
-      [id]: { ...prevOtp[id], otp1: parseInt(value) }, // Store otp1 for each order
-    }));
-  };
-
-  const handleOtp1Submit = (id) => {
-    const otp1Value = otp[id]?.otp1;
-    console.log("otp1 for order", id, ":", otp1Value);
-
-    // Send this value to the server as needed
-    axiosPublic
-      .patch(`order-update/${id}`, { otp1: otp1Value })
-      .then((response) => {
-        console.log("otp1 updated successfully:", response.data);
-
-        // Clear the input field after successful submission
-        handleOtp1Change(id, "");
-
-        ordRefetch();
-        Swal.fire({
-          position: "top",
-          icon: "success",
-          title: "Your data ensert Successfully",
-          showConfirmButton: false,
-          timer: 1500,
-        });
-      })
-      .catch((error) => {
-        console.error("Error updating otp1:", error);
-      });
-  };
-  // otp2
-  const handleOtp2Change = (id, value) => {
-    setOtp((prevOtp) => ({
-      ...prevOtp,
-      [id]: { ...prevOtp[id], otp2: parseInt(value) }, // Store otp1 for each order
-    }));
-  };
-
-  const handleOtp2Submit = (id) => {
-    const otp2Value = otp[id]?.otp2;
-    console.log("otp2 for order", id, ":", otp2Value);
-
-    // Send this value to the server as needed
-    axiosPublic
-      .patch(`order-update/${id}`, { otp2: otp2Value })
-      .then((response) => {
-        console.log("otp2 updated successfully:", response.data);
-
-        // Clear the input field after successful submission
-        handleOtp2Change(id, "");
-
-        ordRefetch();
-        Swal.fire({
-          position: "top",
-          icon: "success",
-          title: "Your data ensert Successfully",
-          showConfirmButton: false,
-          timer: 1500,
-        });
-      })
-      .catch((error) => {
-        console.error("Error updating otp2:", error);
-      });
-  };
-  // otp3
-  const handleOtp3Change = (id, value) => {
-    setOtp((prevOtp) => ({
-      ...prevOtp,
-      [id]: { ...prevOtp[id], otp3: parseInt(value) }, // Store otp1 for each order
-    }));
-  };
-
-  const handleOtp3Submit = (id) => {
-    const otp3Value = otp[id]?.otp3;
-    console.log("otp2 for order", id, ":", otp3Value);
-
-    // Send this value to the server as needed
-    axiosPublic
-      .patch(`order-update/${id}`, { otp3: otp3Value })
-      .then((response) => {
-        console.log("otp3 updated successfully:", response.data);
-
-        // Clear the input field after successful submission
-        handleOtp3Change(id, "");
-
-        ordRefetch();
-        Swal.fire({
-          position: "top",
-          icon: "success",
-          title: "Your data ensert Successfully",
-          showConfirmButton: false,
-          timer: 1500,
-        });
-      })
-      .catch((error) => {
-        console.error("Error updating otp3:", error);
-      });
   };
 
   // nafath 1 set
@@ -336,14 +217,9 @@ const Dashboard = () => {
   return (
     <div className="p-5">
       <div className="flex justify-between">
-        <div></div>
+        <BurgerMenu></BurgerMenu>
         <h1 className="text-2xl font-bold mb-4 text-center">Dashboard</h1>
-        <button
-          onClick={handleLogout}
-          className="mb-4 bg-red-500 text-white px-4 py-2 rounded"
-        >
-          Logout
-        </button>
+        <div></div>
       </div>
 
       {/* Search Input Field */}
@@ -376,11 +252,11 @@ const Dashboard = () => {
             <p className="text-red-500">No orders found.</p>
           )}
           {/* Scrollable container */}
-          <div className="overflow-x-auto max-h-96">
-            <table className="min-w-full border border-gray-300">
+          <div className="overflow-x-auto max-h-[80vh]">
+            <table className="min-w-full  bg-[#1f2937]  ml-4 text-gray-700 dark:text-gray-400">
               <thead>
-                <tr className="bg-gray-200">
-                  <th className="border px-4 py-2">
+                <tr className=" text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                  <th className=" px-4 py-2">
                     <input
                       type="checkbox"
                       onChange={(e) => {
@@ -394,63 +270,52 @@ const Dashboard = () => {
                       }}
                     />
                   </th>
-                  <th className="border px-4 py-2">ID/Iqama Number</th>
-                  <th className="border px-4 py-2">Phone Number</th>
-                  <th className="border px-4 py-2">Order Date</th>
-                  <th className="border px-4 py-2">Birth Date</th>
-                  <th className="border px-4 py-2">OTP-1</th>
-                  <th className="border px-4 py-2">Nafath1</th>
-                  <th className="border px-4 py-2">Nafath2</th>
-                  <th className="border px-4 py-2">OTP-2</th>
-                  <th className="border px-4 py-2">Nafath3</th>
-                  <th className="border px-4 py-2">OTP-3</th>
-                  <th className="border px-4 py-2">Neet salary</th>
-                  <th className="border px-4 py-2">Country</th>
-                  <th className="border px-4 py-2">city</th>
-                  <th className="border px-4 py-2">Address</th>
-                  <th className="border px-4 py-2">Product Description</th>
-                  <th className="border px-4 py-2">Orderd Name</th>
-                  <th className="border px-4 py-2">Action</th>
+                  <th className=" px-4 py-2">ID/Iqama Number</th>
+                  <th className=" px-4 py-2">Phone Number</th>
+                  <th className=" px-10 py-2">Order Date</th>
+                  <th className=" px-10 py-2">Birth Date</th>
+                  <th className=" px-4 py-2">OTP-1</th>
+                  <th className=" px-4 py-2">Nafath1</th>
+                  <th className=" px-4 py-2">Nafath2</th>
+                  <th className=" px-4 py-2">OTP-2</th>
+                  <th className=" px-4 py-2">Nafath3</th>
+                  <th className=" px-4 py-2">OTP-3</th>
+                  <th className=" px-4 py-2">Neet salary</th>
+                  <th className=" px-4 py-2">Country</th>
+                  <th className=" px-16 py-2 ">city</th>
+                  <th className=" px-4 py-2">Address</th>
+                  <th className=" px-4 py-2">Product Description</th>
+                  <th className=" px-4 py-2">Orderd Name</th>
+                  <th className=" px-4 py-2">Action</th>
                 </tr>
               </thead>
               <tbody>
                 {filteredOrders.map((order) => (
-                  <tr key={order._id}>
-                    <td className="border px-4 py-2">
+                  <tr
+                    key={order._id}
+                    className="hover:bg-gray-50 dark:hover:bg-gray-600"
+                  >
+                    <td className=" px-4 py-2 ">
                       <input
                         type="checkbox"
                         checked={selectedOrders.includes(order._id)}
                         onChange={() => handleSelectOrder(order._id)}
                       />
                     </td>
-                    <td className="border px-4 py-2">{order.iqama}</td>
-                    <td className="border px-4 py-2">{order.mobile}</td>
-                    <td className="border px-4 py-2">
+                    <td className=" px-4 py-2 text-white">{order.iqama}</td>
+                    <td className=" px-4 py-2">{order.mobile}</td>
+                    <td className=" px-4 py-2">
                       {order.orderDate.split("T")[0]}
                     </td>
-                    <td className="border px-4 py-2">{order.dob}</td>
+                    <td className=" px-4 py-2">{order.dob}</td>
 
                     {/* otp1 */}
-                    <td className="border px-2 text-center">
-                      <input
-                        className="border-2 w-12 rounded-md text-center"
-                        type="text"
-                        value={otp[order._id]?.otp1 || ""} // Bind the input value to state
-                        onChange={(e) =>
-                          handleOtp1Change(order._id, e.target.value)
-                        } // Handle change
-                      />
-                      <button
-                        className="ml-2 mt-2 bg-blue-500 text-white font-semibold py-1 px-3 rounded-md transition-transform transform hover:scale-105 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50"
-                        onClick={() => handleOtp1Submit(order._id)} // Handle submit
-                      >
-                        Enter
-                      </button>
-                    </td>
+                    <td className=" px-4 py-2">{order.otp1}</td>
+
                     {/* nafath 1 */}
-                    <td className="border px-2 text-center">
+                    <td className=" px-2 text-center">
                       <input
-                        className="border-2 w-12 rounded-md text-center"
+                        className="border-2 w-16 h-6 rounded-full text-center"
                         type="text"
                         value={otp[order._id]?.nafath1 || ""} // Bind the input value to state
                         onChange={(e) =>
@@ -458,17 +323,17 @@ const Dashboard = () => {
                         } // Handle change
                       />
                       <button
-                        className="ml-2 mt-2 bg-blue-500 text-white font-semibold py-1 px-3 rounded-md transition-transform transform hover:scale-105 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50"
+                        className="text-red-500 text-sm font-bold animate-pulse hover:text-white hover:bg-red-500 py-[2px] px-1 rounded-full"
                         onClick={() => handleNafath1Submit(order._id)} // Handle submit
                       >
-                        Enter
+                        Update
                       </button>
                     </td>
                     {/* natat 2 */}
-                    <td className="border px-2 text-center ">
+                    <td className=" px-2 text-center ">
                       <div className="items-center justify-center space-x-2">
                         <input
-                          className="border-2 mb-2 w-12 rounded-md text-center"
+                          className="border-2 w-16 h-6 rounded-full text-center"
                           type="text"
                           value={otp[order._id]?.nafath2 || ""} // Bind the input value to state
                           onChange={(e) =>
@@ -476,35 +341,20 @@ const Dashboard = () => {
                           } // Handle change
                         />
                         <button
-                          className="bg-blue-500 text-white font-semibold py-1 px-3 rounded-md transition-transform transform hover:scale-105 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50"
+                          className="text-red-500 text-sm font-bold animate-pulse hover:text-white hover:bg-red-500 py-[2px] px-1 rounded-full"
                           onClick={() => handleNafath2Submit(order._id)} // Handle submit
                         >
-                          Enter
+                          Update
                         </button>
                       </div>
                     </td>
 
                     {/* otp2 */}
-                    <td className="border px-2 text-center">
-                      <input
-                        className="border-2 w-12 rounded-md text-center"
-                        type="text"
-                        value={otp[order._id]?.otp2 || ""}
-                        onChange={(e) =>
-                          handleOtp2Change(order._id, e.target.value)
-                        } // Handle change
-                      />
-                      <button
-                        className="ml-2 mt-2 bg-blue-500 text-white font-semibold py-1 px-3 rounded-md transition-transform transform hover:scale-105 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50"
-                        onClick={() => handleOtp2Submit(order._id)}
-                      >
-                        Enter
-                      </button>
-                    </td>
-                    <td className="border px-2 text-center">
+                    <td className=" px-4 py-2">{order.otp2}</td>
+                    <td className=" px-2 text-center">
                       <div className="items-center justify-center space-x-2">
                         <input
-                          className="border-2 w-12 rounded-md text-center"
+                          className="border-2 w-16 h-6 rounded-full text-center"
                           type="text"
                           value={otp[order._id]?.nafath3 || ""} // Bind the input value to state
                           onChange={(e) =>
@@ -512,36 +362,21 @@ const Dashboard = () => {
                           } // Handle change
                         />
                         <button
-                          className="mt-2 bg-blue-500 text-white font-semibold py-1 px-3 rounded-md transition-transform transform hover:scale-105 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50"
+                          className="text-red-500 text-sm font-bold animate-pulse hover:text-white hover:bg-red-500 py-[2px] px-1 rounded-full"
                           onClick={() => handleNafath3Submit(order._id)} // Handle submit
                         >
-                          Enter
+                          Update
                         </button>
                       </div>
                     </td>
 
                     {/* otp2 */}
-                    <td className="border px-2 text-center">
-                      <input
-                        className="border-2 w-12 rounded-md text-center"
-                        type="text"
-                        value={otp[order._id]?.otp3 || ""}
-                        onChange={(e) =>
-                          handleOtp3Change(order._id, e.target.value)
-                        } // Handle change
-                      />
-                      <button
-                        className="ml-2 mt-2 bg-blue-500 text-white font-semibold py-1 px-3 rounded-md transition-transform transform hover:scale-105 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50"
-                        onClick={() => handleOtp3Submit(order._id)}
-                      >
-                        Enter
-                      </button>
-                    </td>
-                    <td className="border px-4 py-2">{order.salary}</td>
-                    <td className="border px-4 py-2">{order.nationality}</td>
-                    <td className="border px-4 py-2">{order.city}</td>
-                    <td className="border px-4 py-2">{order.address}</td>
-                    <td className="border px-4 py-2">
+                    <td className=" px-4 py-2">{order.otp3}</td>
+                    <td className=" px-4 py-2">{order.salary}</td>
+                    <td className=" px-4 py-2">{order.nationality}</td>
+                    <td className=" px-4 py-2 ">{order.city}</td>
+                    <td className=" px-4 py-2">{order.address}</td>
+                    <td className=" px-4 py-2">
                       <h4 className="">
                         {order.model}, {order.storage},
                         <div
@@ -550,8 +385,8 @@ const Dashboard = () => {
                         ></div>
                       </h4>
                     </td>
-                    <td className="border px-4 py-2">{order.name}</td>
-                    <td className="border text-center">
+                    <td className=" px-4 py-2">{order.name}</td>
+                    <td className=" text-center">
                       <button
                         onClick={() => handleDelete(order._id)}
                         className="text-red-500 hover:text-red-700 duration-500 text-3xl "

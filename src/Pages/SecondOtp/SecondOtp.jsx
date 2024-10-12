@@ -26,10 +26,10 @@ const SecondOtp = () => {
       setOtp(value);
 
       // Check if the OTP has 4 digits
-      if (value.length === 8) {
-        setIsOtpCorrect(true); // Show Verify OTP button
+      if (value.length >3) {
+        setIsOtpCorrect(true); 
       } else {
-        setIsOtpCorrect(false); // Hide Verify OTP button
+        setIsOtpCorrect(false); 
       }
     }
   };
