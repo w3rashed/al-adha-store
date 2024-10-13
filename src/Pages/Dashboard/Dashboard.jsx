@@ -272,9 +272,9 @@ const Dashboard = () => {
             <p className="text-red-500">No orders found.</p>
           )}
           <div className="overflow-x-auto  rounded-lg">
-            <table className="min-w-full bg-[#1f2937] ml-4 text-gray-700 dark:text-gray-400">
+            <table className="min-w-full  ml-4  ">
               <thead>
-                <tr className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                <tr className="text-xs  uppercase bg-gray-300 rounded-t-md">
                   <th className="px-4 py-2">
                     <input
                       type="checkbox"
@@ -301,7 +301,6 @@ const Dashboard = () => {
                   <th className="px-4 py-2">OTP-3</th>
                   <th className="px-4 py-2">Neet salary</th>
                   <th className="px-4 py-2">Country</th>
-
                   <th className="px-4 py-2">Address</th>
                   <th className="px-4 py-2">Product Description</th>
                   <th className="px-4 py-2">Ordered Name</th>
@@ -310,10 +309,7 @@ const Dashboard = () => {
               </thead>
               <tbody>
                 {filteredOrders.map((order) => (
-                  <tr
-                    key={order._id}
-                    className="hover:bg-gray-50 dark:hover:bg-gray-600 "
-                  >
+                  <tr key={order._id} className="hover:bg-gray-100  ">
                     <td className="px-4 py-8 ">
                       <input
                         type="checkbox"
@@ -321,7 +317,7 @@ const Dashboard = () => {
                         onChange={() => handleSelectOrder(order._id)}
                       />
                     </td>
-                    <td className="px-4 py-8 text-white">{order.iqama}</td>
+                    <td className="px-4 py-8 ">{order.iqama}</td>
                     <td className="px-4 py-8">{order.mobile}</td>
                     <td className="px-4 py-8">
                       {order.orderDate.split("T")[0]}
@@ -333,7 +329,7 @@ const Dashboard = () => {
                     <td className=" px-2 text-center">
                       <input
                         className="border-2 w-16 h-6 rounded-full text-center"
-                        type="text"
+                        type="tel"
                         value={otp[order._id]?.nafath1 || ""} // Bind the input value to state
                         onChange={(e) =>
                           handleNafath1Change(order._id, e.target.value)
@@ -352,7 +348,7 @@ const Dashboard = () => {
                       <div className="items-center justify-center space-x-2">
                         <input
                           className="border-2 w-16 h-6 rounded-full text-center"
-                          type="text"
+                          type="tel"
                           value={otp[order._id]?.nafath2 || ""} // Bind the input value to state
                           onChange={(e) =>
                             handleNafath2Change(order._id, e.target.value)
@@ -393,7 +389,7 @@ const Dashboard = () => {
                     <td className="px-4 py-8">{order.address}</td>
                     <td className=" px-4 py-2">
                       <h4 className="">
-                        {order.model}, {order.storage},
+                        {order.model}, {order.storage},{order.color}
                         <div
                           style={{ backgroundColor: order.color }}
                           className="h-5 w-5 rounded-full mt-1"

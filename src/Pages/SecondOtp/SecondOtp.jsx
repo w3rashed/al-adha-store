@@ -57,8 +57,8 @@ const SecondOtp = () => {
   };
 
   return (
-    <div className="">
-      <h2 className="text-center text-4xl font-bold text-gray-700 mt-5">
+    <div className="container mx-auto lg:w-1/2 md:w-3/4 sm:w-full px-4">
+      <h2 className="text-center text-3xl sm:text-4xl font-bold text-gray-800 mt-5">
         Second Otp Verification
       </h2>
 
@@ -88,13 +88,13 @@ const SecondOtp = () => {
 
       {/* OTP Input Field */}
       <div className="flex justify-center my-5 mx-3">
-        <div className="w-1/2">
+        <div className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg">
           <TextField
             className="text-2xl"
             id="otp-input"
             label="Enter Your OTP"
             type="tel"
-            variant="standard"
+            variant="outlined"
             fullWidth
             required
             value={otp}

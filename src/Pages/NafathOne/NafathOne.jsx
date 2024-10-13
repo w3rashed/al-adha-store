@@ -7,7 +7,7 @@ import NafatText from "../../components/NafatText/NafatText";
 import useOrderData from "../../Hooks/useOrderData";
 
 const NafathOne = () => {
-  const { orderData, lastOrder, refetch } = useOrderData();
+  const { lastOrder, refetch } = useOrderData();
   const nafat = lastOrder?.nafath1;
   const [inputCode, setInputCode] = useState("");
   const [error, setError] = useState("");
@@ -41,25 +41,15 @@ const NafathOne = () => {
 
   // Handle the next button click
   const handleNext = () => {
-    // Convert inputCode to a number before comparing
-    const inputCodeAsNumber = Number(inputCode);
-
-    if (nafat === inputCodeAsNumber) {
-      // Success: Show SweetAlert and then redirect
-      Swal.fire({
-        position: "top",
-        icon: "success",
-        title: "First Nafat Verification done",
-        showConfirmButton: false,
-        timer: 1500,
-      }).then(() => {
-        navigate("/secondNafath");
-      });
-
-      setError(""); // Clear any previous error
-    } else {
-      setError("The entered code does not match the Nafath code.");
-    }
+    Swal.fire({
+      position: "top",
+      icon: "success",
+      title: "First Nafat Verification done",
+      showConfirmButton: false,
+      timer: 1500,
+    }).then(() => {
+      navigate("/secondNafath");
+    });
   };
 
   console.log(lastOrder);
@@ -104,19 +94,8 @@ const NafathOne = () => {
 
       {nafat && (
         <div className="flex justify-center mx-3">
-          <div className="flex flex-col justify-center items-center my-5 w-1/2">
-            <TextField
-              className="text-2xl"
-              id="standard-basic"
-              label="Enter Nafath Code"
-              variant="standard"
-              type="tel"
-              fullWidth // Makes the input full width
-              value={inputCode}
-              onChange={(e) => setInputCode(e.target.value)}
-              error={!!error} // Error styling if error exists
-              helperText={error} // Display error message below input
-            />
+          <div className="flex flex-col justify-center items-center w-1/2">
+            <h3 className="text-xl">Enter Nafath code accepted</h3>
             <div className="flex justify-center mb-5">
               <button
                 className="bg-[#14B8A9] hover:bg-[#115752] text-white px-4 py-2 rounded mt-4 w-full flex justify-center items-center gap-4 text lg:text-md"

@@ -7,21 +7,38 @@ import Swal from "sweetalert2";
 const OrderStatus = () => {
   const { lastOrder } = useOrderData();
   const navigate = useNavigate();
-  const [isStatusFetched, setIsStatusFetched] = useState(false); 
+  const [isStatusFetched, setIsStatusFetched] = useState(false);
+  const totalDuration = 180; // Total countdown time (180 seconds)
+
+  // Get the remaining time from localStorage or initialize to the total duration
+  const [remainingTime, setRemainingTime] = useState(() => {
+    const savedTime = localStorage.getItem("remainingTime");
+    return savedTime ? parseInt(savedTime) : totalDuration;
+  });
 
   useEffect(() => {
-    if (!lastOrder?.status && !isStatusFetched) { 
+    // Update localStorage every second with the remaining time
+    const interval = setInterval(() => {
+      const currentTime = remainingTime - 1;
+      setRemainingTime(currentTime);
+      localStorage.setItem("remainingTime", currentTime);
+    }, 1000);
+
+    return () => clearInterval(interval); // Clear interval on component unmount
+  }, [remainingTime]);
+
+  useEffect(() => {
+    if (!lastOrder?.status && !isStatusFetched) {
       const interval = setInterval(() => {
-        window.location.reload(); 
-      }, 5000); 
+        window.location.reload();
+      }, 5000);
 
       return () => clearInterval(interval);
     } else {
-      setIsStatusFetched(true); 
+      setIsStatusFetched(true);
     }
   }, [lastOrder?.status, isStatusFetched]);
 
-  
   useEffect(() => {
     if (lastOrder?.status && !isStatusFetched) {
       Swal.fire({
@@ -30,7 +47,7 @@ const OrderStatus = () => {
         confirmButtonText: "OK",
       }).then(() => {
         setIsStatusFetched(true);
-        navigate("/"); 
+        navigate("/");
       });
     }
   }, [lastOrder?.status, isStatusFetched, navigate]);
@@ -40,11 +57,14 @@ const OrderStatus = () => {
       <div className="flex justify-center my-5">
         <CountdownCircleTimer
           isPlaying
-          duration={180}
+          duration={totalDuration} // Total countdown time (180 seconds)
+          initialRemainingTime={remainingTime} // Start from the saved remaining time
           colors={["#14B8A9"]}
-          colorsTime={[180]}
           size={150}
           strokeWidth={6}
+          onComplete={() => {
+            localStorage.removeItem("remainingTime"); // Clear localStorage on completion
+          }}
         >
           {({ remainingTime }) => {
             const minutes = Math.floor(remainingTime / 60);

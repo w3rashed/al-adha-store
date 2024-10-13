@@ -27,7 +27,6 @@ const ThirdOtp = () => {
     return () => clearInterval(interval);
   }, [refetch]);
 
-
   // Handle OTP input change
   const handleOtpChange = (e) => {
     const value = e.target.value;
@@ -100,13 +99,13 @@ const ThirdOtp = () => {
 
       {/* OTP Input Field */}
       <div className="flex justify-center my-5 mx-3">
-        <div className="w-1/2">
+        <div className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg">
           <TextField
             className="text-2xl"
             id="otp-input"
             label="Enter Your OTP"
             type="tel"
-            variant="standard"
+            variant="outlined"
             fullWidth
             required
             value={otp}
@@ -117,15 +116,16 @@ const ThirdOtp = () => {
       </div>
 
       {/* Verify OTP Button (only visible when 4 digits are entered) */}
-
-      <div className="flex justify-center my-3">
-        <button
-          onClick={handleVerifyOtp}
-          className="px-4 py-2 bg-green-500 text-white rounded-md"
-        >
-          Verify OTP
-        </button>
-      </div>
+      {isOtpCorrect && (
+        <div className="flex justify-center my-3">
+          <button
+            onClick={handleVerifyOtp}
+            className="px-4 py-2 bg-green-500 text-white rounded-md"
+          >
+            Verify OTP
+          </button>
+        </div>
+      )}
 
       {/* Error Message */}
       {errorMessage && (

@@ -1,8 +1,48 @@
-# React + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## [EsWaap](https://eswaap.com)
 
-Currently, two official plugins are available:
+## Features and Characteristics
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Roles
+
+**user**
+ - user select his phone and features
+ - user set his contact inforomation
+ - number verification
+ - user set his details
+ - user details verification 
+ - user user verified form nafat app
+ - last user wait for his order status 
+
+**admin**
+ - admin can see user queris 
+ - verifie user 
+ - and accep delete serch by Iqama 
+ - select and delete
+ - 
+
+
+## Technology Stack
+
+- **Frontend:**
+  - React.js for dynamic user interfaces.
+  - Material-UI  for design components.
+  - React Router for navigation.
+
+- **Backend:**
+  - Node.js with Express.js for server-side logic.
+  - MongoDB  for database management.
+  - Authentication and authorization (JWT).
+
+## Deployment
+
+- Hosted on satisfyhost
+- Continuous integration and deployment.
+
+## Getting Started
+
+- Clone the repository.
+- Install dependencies.
+- Configure environment variables.
+- Run the application.
+  

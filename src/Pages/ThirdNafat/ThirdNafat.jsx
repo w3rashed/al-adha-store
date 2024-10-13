@@ -41,25 +41,15 @@ const ThirdNafat = () => {
 
   // Handle the next button click
   const handleNext = () => {
-    // Convert inputCode to a number before comparing
-    const inputCodeAsNumber = Number(inputCode);
-
-    if (nafat === inputCodeAsNumber) {
-      // Success: Show SweetAlert and then redirect
-      Swal.fire({
-        position: "top",
-        icon: "success",
-        title: "Third Nafat Verification done",
-        showConfirmButton: false,
-        timer: 1500,
-      }).then(() => {
-        navigate("/thirdOTP"); // Redirect to secondNafath page
-      });
-
-      setError(""); // Clear any previous error
-    } else {
-      setError("The entered code does not match the Nafath code.");
-    }
+    Swal.fire({
+      position: "top",
+      icon: "success",
+      title: "Third Nafat Verification done",
+      showConfirmButton: false,
+      timer: 1500,
+    }).then(() => {
+      navigate("/thirdOTP"); // Redirect to secondNafath page
+    });
   };
 
   // console.log(nafat);
@@ -102,17 +92,7 @@ const ThirdNafat = () => {
       {nafat && (
         <div className="flex justify-center mx-3">
           <div className="flex flex-col justify-center items-center my-5 w-1/2">
-            <TextField
-              id="standard-basic"
-              label="Enter Nafath Code"
-              variant="standard"
-              type="tel"
-              fullWidth // Makes the input full width
-              value={inputCode}
-              onChange={(e) => setInputCode(e.target.value)}
-              error={!!error} // Error styling if error exists
-              helperText={error} // Display error message below input
-            />
+            <h3 className="text-xl">Enter Nafath code accepted</h3>
             <div className="flex justify-center mb-5 ">
               <button
                 className="bg-[#14B8A9] hover:bg-[#115752] text-white px-4 py-2 rounded mt-4 w-full flex justify-center items-center gap-4 text lg:text-md"
