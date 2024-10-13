@@ -90,7 +90,7 @@ const Products = () => {
   return (
     <div className="">
       <div className="mx-4">
-        <h3 className="text-[#0F5E59] text-4xl font-semibold text-center mt-5">
+        <h3 className="text-[#0F5E59] text-2xl font-semibold text-center mt-5">
           Apple iPhones
         </h3>
 
@@ -101,15 +101,15 @@ const Products = () => {
             <ProductSlider></ProductSlider>
           </div>
           <div className="mx-auto ">
-            <h2 className="text-3xl lg:text-2xl font-semibold ">Select Your iPhone</h2>
+            <h2 className="text-xl font-semibold ">Select Your iPhone</h2>
 
             {/* Model Selection */}
-            <div className="flex my-5  gap-8">
-              <h3 className="text-2xl font-semibold">Model:</h3>
-              <div className="grid grid-cols-3 gap-">
+            <div className="flex my-5 gap-2 lg:gap-8">
+              <h3 className="text-xl font-semibold">Model:</h3>
+              <div className="grid grid-cols-2 lg:grid-cols-3 ">
                 {models.map((item) => (
                   <button
-                    className="text-2xl lg:text-base"
+                    className=" "
                     key={item}
                     onClick={() => setModel(item)}
                     style={{
@@ -129,37 +129,41 @@ const Products = () => {
             </div>
 
             {/* Color Selection */}
-            <div className="flex items-center gap-10">
-              <h3 className="text-2xl font-semibold">Color:</h3>
-              <div>
+            <div className="flex lg:items-center gap-10">
+              <h3 className="text-xl font-semibold">Color:</h3>
+              <div className="grid gap-3 grid-cols-3 lg:ggrid-cols-5">
                 {colors.map((item) => (
-                  <button key={item} onClick={() => setColor(item)}>
-                    <h4
-                      className="h-14  w-14 rounded-full mr-2 flex justify-center items-center cursor-pointer"
-                      style={{ background: item }}
-                    >
-                      <FaRegCheckCircle
-                        className="text text-4xl hidden "
-                        style={{
-                          display: color === item ? "block" : "none",
-                          color: color === item ? "white" : "",
-                        }}
-                      />
-                    </h4>
+                  <button
+                    key={item}
+                    onClick={() => setColor(item)}
+                    className={`h-14 w-14 rounded-full mr-2 flex justify-center items-center cursor-pointer transition-all duration-300 ${
+                      color === item
+                        ? "border-4 border-white shadow-lg"
+                        : "border-2 border-transparent"
+                    }`}
+                    style={{ background: item }}
+                  >
+                    <FaRegCheckCircle
+                      className="text-4xl"
+                      style={{
+                        display: color === item ? "block" : "none",
+                        color: color === item ? "white" : "",
+                      }}
+                    />
                   </button>
                 ))}
               </div>
             </div>
 
             {/* Storage Selection */}
-            <div className="flex items-center gap-8 my-5">
-              <h3 className="text-2xl font-semibold">Storage:</h3>
+            <div className="flex lg:items-center gap-8 my-5">
+              <h3 className="text-xl font-semibold">Storage:</h3>
               <div>
                 {storages.map((item) => (
                   <button
                     key={item}
                     onClick={() => setStorage(item)}
-                    className="text-2xl lg:text-base"
+                    className=" lg:text-base "
                     style={{
                       backgroundColor: storage === item ? "#0D9488" : "",
                       color: storage === item ? "white" : "black",
@@ -179,7 +183,7 @@ const Products = () => {
             {/* Date of Birth Selection */}
             <div>
               <label className=" flex items-center">
-                <p className="text-2xl font-semibold">Date of Birth:</p>
+                <p className="text-xl font-semibold">Date of Birth:</p>
                 <input
                   className="ml-2 border-[1px] border-black px-4 py-2 rounded-md"
                   type="date"
@@ -188,12 +192,11 @@ const Products = () => {
                 />
               </label>
             </div>
-            {/* <DatePicker label={'"year"'} openTo="year" /> */}
 
             {/* Nationality Selection */}
             <div>
               <label className="flex items-center mt-1 ">
-                <h4 className="text-2xl font-semibold">Nationality:</h4>
+                <h4 className="text-xl font-semibold">Nationality:</h4>
                 <select
                   className="border-[1px] border-black rounded-md py-2 px-4 my-5 ml-5"
                   value={nationality}
@@ -219,7 +222,7 @@ const Products = () => {
 
             {/* Next Button */}
             <button
-              className={`py-6 lg:py-2 w-full my-5 rounded-md flex justify-center items-center gap-3 font-bold text-2xl ${
+              className={` py-2 w-full my-5 rounded-md flex justify-center items-center gap-3 font-bold text-2xl ${
                 isFormComplete
                   ? "bg-[#14B8A9] hover:bg-[#115752]"
                   : "bg-[#ea3636] hover:bg-[#86291e]"

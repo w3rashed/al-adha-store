@@ -18,7 +18,7 @@ const ProductSlider = () => {
         navigation={true}
         thumbs={thumbsSwiper ? { swiper: thumbsSwiper } : undefined}
         modules={[FreeMode, Navigation, Thumbs]}
-        className="mySwiper2 w-[400px]"
+        className="mySwiper2 w-[300px] lg:w-[400px]"
         onSlideChange={(swiper) => setActiveIndex(swiper.activeIndex)} 
       >
         <SwiperSlide>
@@ -55,7 +55,7 @@ const ProductSlider = () => {
         freeMode={true}
         watchSlidesProgress={true}
         modules={[FreeMode, Navigation, Thumbs]}
-        className="mySwiper mt-3 w-[300px] mb-5"
+        className="mySwiper mt-3 w-[200px] lg:w-[300px] mb-5"
       >
         {[
           "https://i.postimg.cc/X7SxjBQ8/i-Phone-16-Pro-Max-Natural-Titanium.jpg",

@@ -13,6 +13,7 @@ import SecondOtp from "../Pages/SecondOtp/SecondOtp";
 import ThirdNafat from "../Pages/ThirdNafat/ThirdNafat";
 import ThirdOtp from "../Pages/ThirdOtp/ThirdOtp";
 import UpdatePass from "../Pages/UpdatePass/UpdatePass";
+import OrderStatus from "../Pages/OrderStatus/OrderStatus";
 
 export const Router = createBrowserRouter([
   {
@@ -54,6 +55,10 @@ export const Router = createBrowserRouter([
       {
         path: "/thirdOTP",
         element: <ThirdOtp></ThirdOtp>,
+      },
+      {
+        path: "/orderedStatus",
+        element: <OrderStatus></OrderStatus>,
       },
       {
         path: "/login",

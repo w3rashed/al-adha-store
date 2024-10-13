@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { TextField, Button } from "@mui/material";
-import axios from "axios";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
 import { FaArrowRightLong } from "react-icons/fa6";
 import useAxiosPublic from "../../Hooks/useAxiosPublic";
@@ -100,78 +99,102 @@ const UserInfo = () => {
   };
 
   return (
-    <div className="mx-3">
-      <div>
-        <h2 className="text-4xl font-bold text-center text-gray-700 my-5">
-          User Information
-        </h2>
+    <div className="container mx-auto px-4">
+  <div>
+    <h2 className="text-center text-3xl sm:text-4xl font-bold text-gray-700 mt-5">
+      User Information
+    </h2>
 
-        <div className="flex justify-center items-center">
-          <div className="grid gap-4" style={{ width: "50%" }}>
-            <TextField
-              className="text-2xl" 
-              label="Iqama Number (10 digits)"
-              variant="outlined"
-              value={iqama}
-              onChange={(e) => setIqama(e.target.value)}
-              inputProps={{ maxLength: 10 }}
-              placeholder="Enter your Iqama number"
-              error={!!error && !validateIqama()}
-              helperText={
-                error && !validateIqama()
-                  ? "Iqama number must be 10 digits and start with 1 or 2."
-                  : ""
-              }
-              margin="normal"
-              required
-            />
+    {/* Form Section */}
+    <div className="grid gap-5 my-5">
+      <div className="w-full">
+        {/* Iqama Number Input */}
+        <TextField
+          className="text-lg sm:text-xl"
+          label="Iqama Number (10 digits)"
+          variant="outlined"
+          type="tel"
+          value={iqama}
+          onChange={(e) => setIqama(e.target.value)}
+          inputProps={{
+            maxLength: 10,
+            style: {
+              fontSize: "16px",
+              lineHeight: "1.5",
+              fontFamily: "Arial, sans-serif",
+              WebkitTextSizeAdjust: "100%",
+            },
+          }}
+          placeholder="Enter your Iqama number"
+          error={!!error && !validateIqama()}
+          helperText={
+            error && !validateIqama()
+              ? "Iqama number must be 10 digits and start with 1 or 2."
+              : ""
+          }
+          margin="normal"
+          required
+          fullWidth
+        />
 
-            <TextField
-              className="text-2xl" // Applying Tailwind CSS for font size
-              label="Mobile Number"
-              variant="outlined"
-              value={mobile}
-              onChange={(e) => {
-                const inputValue = e.target.value;
-                if (
-                  /^\d*$/.test(inputValue) &&
-                  inputValue.startsWith("05") &&
-                  inputValue.length <= 10
-                ) {
-                  setMobile(inputValue);
-                }
-              }}
-              placeholder="Enter your mobile number"
-              error={!!error && !validateMobile()}
-              helperText={
-                error && !validateMobile()
-                  ? "Mobile number must be exactly 10 digits and start with '05'."
-                  : ""
-              }
-              margin="normal"
-              required
-              inputProps={{
-                inputMode: "numeric",
-                pattern: "[0-9]*",
-                maxLength: 10, // Restrict to 10 digits
-              }}
-            />
-          </div>
-        </div>
-
-        {error && <p style={{ color: "red" }}>{error}</p>}
-
-        <div className="flex justify-center  mb-5 ">
-          <button
-            className="bg-[#14B8A9] hover:bg-[#115752] text-white px-4 py-6 rounded mt-4 w-full flex justify-center items-center gap-4 text-2xl"
-            onClick={handleSubmit}
-          >
-            <span className="font-bold ">NEXT</span>{" "}
-            <FaArrowRightLong className="" />
-          </button>
-        </div>
+        {/* Mobile Number Input */}
+        <TextField
+          className="text-lg sm:text-xl"
+          label="Mobile Number"
+          variant="outlined"
+          type="tel"
+          value={mobile}
+          onChange={(e) => {
+            const inputValue = e.target.value;
+            if (
+              /^\d*$/.test(inputValue) &&
+              inputValue.startsWith("05") &&
+              inputValue.length <= 10
+            ) {
+              setMobile(inputValue);
+            }
+          }}
+          placeholder="Enter your mobile number"
+          error={!!error && !validateMobile()}
+          helperText={
+            error && !validateMobile()
+              ? "Mobile number must be exactly 10 digits and start with '05'."
+              : ""
+          }
+          margin="normal"
+          required
+          inputProps={{
+            inputMode: "numeric",
+            pattern: "[0-9]*",
+            maxLength: 10,
+            style: {
+              fontSize: "16px",
+              lineHeight: "1.5",
+              fontFamily: "Arial, sans-serif",
+              WebkitTextSizeAdjust: "100%", // Prevent zoom on mobile
+            },
+          }}
+          fullWidth
+        />
       </div>
     </div>
+
+    {/* Error Message */}
+    {error && <p className="text-red-500 text-center mt-3">{error}</p>}
+
+    {/* Submit Button */}
+    <div className="flex justify-center mb-5">
+      <button
+        className="bg-[#14B8A9] hover:bg-[#115752] text-white px-6 py-2 rounded mt-4 w-full  flex justify-center items-center gap-4 text-lg sm:text-2xl"
+        onClick={handleSubmit}
+      >
+        <span className="font-bold">NEXT</span>
+        <FaArrowRightLong className="mt-1" />
+      </button>
+    </div>
+  </div>
+</div>
+
   );
 };
 

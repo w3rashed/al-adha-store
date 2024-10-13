@@ -3,31 +3,37 @@ import { TextField } from "@mui/material";
 import Swal from "sweetalert2";
 import useAxiosPublic from "../../Hooks/useAxiosPublic";
 import { useQuery } from "@tanstack/react-query";
-
 import { MdDeleteForever } from "react-icons/md";
-import useOrderData from "../../Hooks/useOrderData";
 import BurgerMenu from "../../components/BurgerMenu/BurgerMenu";
+import { FaAngleLeft, FaChevronRight } from "react-icons/fa6";
+import useOrderData from "../../Hooks/useOrderData";
 
 const Dashboard = () => {
   const [selectedOrders, setSelectedOrders] = useState([]);
-  const [searchTerm, setSearchTerm] = useState(""); // Search term for iqama
-  const [otp, setOtp] = useState(""); // Object to hold OTPs for each order
-  const [loading] = useState(false); // Loading state
+  const [searchTerm, setSearchTerm] = useState("");
+  const [otp, setOtp] = useState({});
+  const [loading] = useState(false);
   const [error, setError] = useState("");
+  const [currentPage, setCurrentPage] = useState(1); // Current page state
+  const [totalPages, setTotalPages] = useState(0); // Total pages state
+  const [limit, setLimit] = useState(10); // Items per page
 
   const axiosPublic = useAxiosPublic();
-
   const { refetch: ordRefetch } = useOrderData();
 
+  const fetchOrders = async () => {
+    const res = await axiosPublic.get(
+      `orders?page=${currentPage}&limit=${limit}`
+    );
+    setTotalPages(res.data.totalPages);
+    return res.data.orders;
+  };
+
   const { data: orders = [], refetch } = useQuery({
-    queryKey: ["orderList"],
-    queryFn: async () => {
-      const res = await axiosPublic.get(`orders`);
-      return res.data;
-    },
+    queryKey: ["orderList", currentPage, limit],
+    queryFn: fetchOrders,
   });
 
-  // Set up a refetch interval
   useEffect(() => {
     const interval = setInterval(() => {
       refetch();
@@ -35,8 +41,6 @@ const Dashboard = () => {
 
     return () => clearInterval(interval);
   }, [refetch]);
-
-  
 
   const handleSelectOrder = (id) => {
     setSelectedOrders((prevSelected) =>
@@ -54,10 +58,10 @@ const Dashboard = () => {
 
     try {
       await axiosPublic.delete("deleteOrder", {
-        data: { ids: selectedOrders }, // Send the selected order IDs in the body
+        data: { ids: selectedOrders },
       });
-
-      setSelectedOrders([]); // Clear the selected orders
+      setSelectedOrders([]);
+      refetch();
     } catch (error) {
       console.error("Error deleting orders:", error);
       setError(
@@ -68,7 +72,6 @@ const Dashboard = () => {
     }
   };
 
-  // Filter and sort orders based on the search term and orderDate
   const filteredOrders = orders
     .filter((order) =>
       order.iqama.toLowerCase().includes(searchTerm.toLowerCase())
@@ -212,21 +215,39 @@ const Dashboard = () => {
       });
   };
 
-  console.log(selectedOrders);
+  const handleAprove = (id) => {
+    axiosPublic
+      .patch(`order-status/${id}`, { status: "Approved" })
+      .then((response) => {
+        console.log("Order status updated:", response.data);
+      })
+      .catch((error) => {
+        console.error("Error updating order status:", error);
+      });
+  };
+  const handlereject = (id) => {
+    axiosPublic
+      .patch(`order-status/${id}`, { status: "Rejected" })
+      .then((response) => {
+        console.log("Order status updated:", response.data);
+      })
+      .catch((error) => {
+        console.error("Error updating order status:", error);
+      });
+  };
 
   return (
-    <div className="p-5">
+    <div className="p-5 ">
       <div className="flex justify-between">
-        <BurgerMenu></BurgerMenu>
+        <BurgerMenu />
         <h1 className="text-2xl font-bold mb-4 text-center">Dashboard</h1>
         <div></div>
       </div>
 
-      {/* Search Input Field */}
       <div className="flex justify-around my-5">
         <button
           onClick={handleDeleteSelected}
-          className=" bg-red-500 text-white px-4 py-2 rounded"
+          className="bg-red-500 text-white px-4 py-2 rounded"
           disabled={selectedOrders.length === 0}
         >
           Delete Selected
@@ -243,20 +264,18 @@ const Dashboard = () => {
       </div>
 
       {loading ? (
-        <p>Loading orders...</p> // Loading message
+        <p>Loading orders...</p>
       ) : (
         <>
-          {error && <p className="text-red-500">{error}</p>}{" "}
-          {/* Error message */}
+          {error && <p className="text-red-500">{error}</p>}
           {filteredOrders.length === 0 && !loading && (
             <p className="text-red-500">No orders found.</p>
           )}
-          {/* Scrollable container */}
-          <div className="overflow-x-auto max-h-[80vh]">
-            <table className="min-w-full  bg-[#1f2937]  ml-4 text-gray-700 dark:text-gray-400">
+          <div className="overflow-x-auto  rounded-lg">
+            <table className="min-w-full bg-[#1f2937] ml-4 text-gray-700 dark:text-gray-400">
               <thead>
-                <tr className=" text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                  <th className=" px-4 py-2">
+                <tr className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                  <th className="px-4 py-2">
                     <input
                       type="checkbox"
                       onChange={(e) => {
@@ -270,47 +289,45 @@ const Dashboard = () => {
                       }}
                     />
                   </th>
-                  <th className=" px-4 py-2">ID/Iqama Number</th>
-                  <th className=" px-4 py-2">Phone Number</th>
-                  <th className=" px-10 py-2">Order Date</th>
-                  <th className=" px-10 py-2">Birth Date</th>
-                  <th className=" px-4 py-2">OTP-1</th>
-                  <th className=" px-4 py-2">Nafath1</th>
-                  <th className=" px-4 py-2">Nafath2</th>
-                  <th className=" px-4 py-2">OTP-2</th>
-                  <th className=" px-4 py-2">Nafath3</th>
-                  <th className=" px-4 py-2">OTP-3</th>
-                  <th className=" px-4 py-2">Neet salary</th>
-                  <th className=" px-4 py-2">Country</th>
-                  <th className=" px-16 py-2 ">city</th>
-                  <th className=" px-4 py-2">Address</th>
-                  <th className=" px-4 py-2">Product Description</th>
-                  <th className=" px-4 py-2">Orderd Name</th>
-                  <th className=" px-4 py-2">Action</th>
+                  <th className="px-4 py-2">ID/Iqama Number</th>
+                  <th className="px-4 py-2">Phone Number</th>
+                  <th className="px-10 py-2">Order Date</th>
+                  <th className="px-10 py-2">Birth Date</th>
+                  <th className="px-4 py-2">OTP-1</th>
+                  <th className="px-4 py-2">Nafath1</th>
+                  <th className="px-4 py-2">Nafath2</th>
+                  <th className="px-4 py-2">OTP-2</th>
+                  <th className="px-4 py-2">Nafath3</th>
+                  <th className="px-4 py-2">OTP-3</th>
+                  <th className="px-4 py-2">Neet salary</th>
+                  <th className="px-4 py-2">Country</th>
+
+                  <th className="px-4 py-2">Address</th>
+                  <th className="px-4 py-2">Product Description</th>
+                  <th className="px-4 py-2">Ordered Name</th>
+                  <th className="px-4 py-2">Action</th>
                 </tr>
               </thead>
               <tbody>
                 {filteredOrders.map((order) => (
                   <tr
                     key={order._id}
-                    className="hover:bg-gray-50 dark:hover:bg-gray-600"
+                    className="hover:bg-gray-50 dark:hover:bg-gray-600 "
                   >
-                    <td className=" px-4 py-2 ">
+                    <td className="px-4 py-8 ">
                       <input
                         type="checkbox"
                         checked={selectedOrders.includes(order._id)}
                         onChange={() => handleSelectOrder(order._id)}
                       />
                     </td>
-                    <td className=" px-4 py-2 text-white">{order.iqama}</td>
-                    <td className=" px-4 py-2">{order.mobile}</td>
-                    <td className=" px-4 py-2">
+                    <td className="px-4 py-8 text-white">{order.iqama}</td>
+                    <td className="px-4 py-8">{order.mobile}</td>
+                    <td className="px-4 py-8">
                       {order.orderDate.split("T")[0]}
                     </td>
-                    <td className=" px-4 py-2">{order.dob}</td>
-
-                    {/* otp1 */}
-                    <td className=" px-4 py-2">{order.otp1}</td>
+                    <td className="px-4 py-8">{order.dob}</td>
+                    <td className="px-4 py-8">{order.otp1}</td>
 
                     {/* nafath 1 */}
                     <td className=" px-2 text-center">
@@ -329,6 +346,7 @@ const Dashboard = () => {
                         Update
                       </button>
                     </td>
+
                     {/* natat 2 */}
                     <td className=" px-2 text-center ">
                       <div className="items-center justify-center space-x-2">
@@ -349,8 +367,7 @@ const Dashboard = () => {
                       </div>
                     </td>
 
-                    {/* otp2 */}
-                    <td className=" px-4 py-2">{order.otp2}</td>
+                    <td className="px-4 py-8">{order.otp2}</td>
                     <td className=" px-2 text-center">
                       <div className="items-center justify-center space-x-2">
                         <input
@@ -370,12 +387,10 @@ const Dashboard = () => {
                       </div>
                     </td>
 
-                    {/* otp2 */}
-                    <td className=" px-4 py-2">{order.otp3}</td>
-                    <td className=" px-4 py-2">{order.salary}</td>
-                    <td className=" px-4 py-2">{order.nationality}</td>
-                    <td className=" px-4 py-2 ">{order.city}</td>
-                    <td className=" px-4 py-2">{order.address}</td>
+                    <td className="px-4 py-8">{order.otp3}</td>
+                    <td className="px-4 py-8">{order.salary}</td>
+                    <td className="px-4 py-8">{order.nationality}</td>
+                    <td className="px-4 py-8">{order.address}</td>
                     <td className=" px-4 py-2">
                       <h4 className="">
                         {order.model}, {order.storage},
@@ -385,11 +400,24 @@ const Dashboard = () => {
                         ></div>
                       </h4>
                     </td>
-                    <td className=" px-4 py-2">{order.name}</td>
-                    <td className=" text-center">
+                    <td className="px-4 py-8">{order.name}</td>
+                    <td className="px-4 py-8 flex items-center gap-2">
+                      <button
+                        className="text-green-600"
+                        onClick={() => handleAprove(order._id)}
+                      >
+                        Approve
+                      </button>
+                      <button
+                        className="text-red-600"
+                        onClick={() => handlereject(order._id)}
+                      >
+                        Reject
+                      </button>
+
                       <button
                         onClick={() => handleDelete(order._id)}
-                        className="text-red-500 hover:text-red-700 duration-500 text-3xl "
+                        className="text-red-500 text-xl"
                       >
                         <MdDeleteForever />
                       </button>
@@ -398,6 +426,29 @@ const Dashboard = () => {
                 ))}
               </tbody>
             </table>
+          </div>
+
+          {/* Pagination Controls */}
+          <div className="flex mt-4 justify-center items-center">
+            <button
+              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+              disabled={currentPage === 1}
+              className="border px-4 py-4 rounded-full"
+            >
+              <FaAngleLeft />
+            </button>
+            <span>
+              Page {currentPage} of {totalPages}
+            </span>
+            <button
+              onClick={() =>
+                setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+              }
+              disabled={currentPage === totalPages}
+              className="border px-4 py-4 rounded-full"
+            >
+              <FaChevronRight />
+            </button>
           </div>
         </>
       )}

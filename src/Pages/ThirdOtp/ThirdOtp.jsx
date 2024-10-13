@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import TextField from "@mui/material/TextField";
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
 import { useNavigate } from "react-router-dom";
 import useOrderData from "../../Hooks/useOrderData";
 import useAxiosPublic from "../../Hooks/useAxiosPublic";
 import Swal from "sweetalert2";
+
 const ThirdOtp = () => {
   // State for OTP input and error message
   const [otp, setOtp] = useState("");
@@ -16,6 +17,16 @@ const ThirdOtp = () => {
   const axiosPublic = useAxiosPublic();
   const id = lastOrder?._id;
   const navigate = useNavigate();
+
+  // Set up a refetch interval
+  useEffect(() => {
+    const interval = setInterval(() => {
+      refetch();
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [refetch]);
+
 
   // Handle OTP input change
   const handleOtpChange = (e) => {
@@ -35,32 +46,32 @@ const ThirdOtp = () => {
   };
 
   console.log(orderData);
+
   // Handle OTP verification (log the OTP value to the console)
   const handleVerifyOtp = () => {
     console.log("Entered OTP:", otp);
     axiosPublic
       .patch(`order-update/${id}`, { otp3: otp })
       .then((response) => {
-        console.log("OTP2 updated successfully:", response.data);
+        console.log("OTP3 updated successfully:", response.data);
         Swal.fire({
           position: "top",
           icon: "success",
-          title: "Succesfully completed your order",
-          showConfirmButton: false,
-          timer: 1500,
-        }).then(() => {
-          navigate("/");
+          title:
+            "Successfully completed your order. Please wait for admin confirmation!",
         });
       })
+      .then(navigate("/orderedStatus"))
       .catch((error) => {
-        console.error("Error updating OTP1:", error);
+        console.error("Error updating OTP:", error);
+        setErrorMessage("Failed to update OTP. Please try again.");
       });
   };
 
   return (
     <div>
-      <h2 className="text-center text-4xl font-bold text-gray-700">
-        Third Otp Verification
+      <h2 className="text-center text-4xl font-bold text-gray-700 my-5">
+        Third OTP Verification
       </h2>
 
       {/* Countdown Timer */}
@@ -94,7 +105,7 @@ const ThirdOtp = () => {
             className="text-2xl"
             id="otp-input"
             label="Enter Your OTP"
-            type="text"
+            type="tel"
             variant="standard"
             fullWidth
             required
@@ -106,16 +117,15 @@ const ThirdOtp = () => {
       </div>
 
       {/* Verify OTP Button (only visible when 4 digits are entered) */}
-      {isOtpCorrect && (
-        <div className="flex justify-center my-3">
-          <button
-            onClick={handleVerifyOtp}
-            className="px-4 py-2 bg-green-500 text-white rounded-md"
-          >
-            Verify OTP
-          </button>
-        </div>
-      )}
+
+      <div className="flex justify-center my-3">
+        <button
+          onClick={handleVerifyOtp}
+          className="px-4 py-2 bg-green-500 text-white rounded-md"
+        >
+          Verify OTP
+        </button>
+      </div>
 
       {/* Error Message */}
       {errorMessage && (

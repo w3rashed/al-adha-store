@@ -27,9 +27,9 @@ const FristOtp = () => {
 
       // Check if the OTP has 8 digits
       if (value.length > 3) {
-        setIsOtpCorrect(true); 
+        setIsOtpCorrect(true);
       } else {
-        setIsOtpCorrect(false); 
+        setIsOtpCorrect(false);
       }
     }
   };
@@ -57,9 +57,9 @@ const FristOtp = () => {
   };
 
   return (
-    <div className="">
-      <h2 className="text-center text-4xl font-bold text-gray-700 mt-5">
-        First Otp Verification
+    <div className="container mx-auto lg:w-1/2 md:w-3/4 sm:w-full px-4">
+      <h2 className="text-center text-3xl sm:text-4xl font-bold text-gray-800 mt-5">
+        OTP Verification
       </h2>
 
       {/* Countdown Timer */}
@@ -67,10 +67,10 @@ const FristOtp = () => {
         <CountdownCircleTimer
           isPlaying
           duration={180}
-          colors={["#14B8A9"]}
+          colors={["#14B8A9",]}
           colorsTime={[180]}
-          size={150}
-          strokeWidth={6}
+          size={140}
+          strokeWidth={8}
         >
           {({ remainingTime }) => {
             const minutes = Math.floor(remainingTime / 60);
@@ -78,7 +78,7 @@ const FristOtp = () => {
             const formattedSeconds = seconds < 10 ? `0${seconds}` : seconds;
 
             return (
-              <div className="text-2xl sm:text-3xl md:text-4xl">
+              <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900">
                 {`${minutes}:${formattedSeconds}`}
               </div>
             );
@@ -87,29 +87,33 @@ const FristOtp = () => {
       </div>
 
       {/* OTP Input Field */}
-      <div className="flex justify-center my-5 mx-3">
-        <div className="w-1/2">
+      <div className="flex justify-center my-5">
+        <div className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg">
           <TextField
-            className="text-2xl"
+            className="text-lg sm:text-2xl"
             id="otp-input"
-            label="Enter Your OTP"
-            type="text"
-            variant="standard"
+            label="Enter OTP"
+            type="tel"
+            variant="outlined"
             fullWidth
             required
             value={otp}
             onChange={handleOtpChange}
-            inputProps={{ maxLength: 8 }}
+            inputProps={{
+              maxLength: 8,
+              style: { fontSize: "22px", color: "#1F2937" },
+            }} // Darker font color for contrast
+            InputLabelProps={{ style: { color: "#4B5563" } }}
           />
         </div>
       </div>
 
-      {/* Verify OTP Button (only visible when 4 digits are entered) */}
+      {/* Verify OTP Button (only visible when OTP is correct) */}
       {isOtpCorrect && (
         <div className="flex justify-center my-3">
           <button
             onClick={handleVerifyOtp}
-            className="px-4 py-2 bg-green-500 text-white rounded-md"
+            className="px-6 py-2 bg-[#14B8A9] hover:bg-[#115752] text-white rounded-lg font-semibold  transition duration-300"
           >
             Verify OTP
           </button>
@@ -118,7 +122,9 @@ const FristOtp = () => {
 
       {/* Error Message */}
       {errorMessage && (
-        <div className="text-red-500 text-center my-3">{errorMessage}</div>
+        <div className="text-red-600 text-center my-3 font-semibold">
+          {errorMessage}
+        </div>
       )}
     </div>
   );

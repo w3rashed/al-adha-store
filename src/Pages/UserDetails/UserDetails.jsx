@@ -42,71 +42,104 @@ const UserDetails = () => {
   };
 
   return (
-    <div className="mx-3 mb-10 lg:mb-0">
-      <h3 className="text-center text-4xl font-bold text-gray-700 my-5">
+    <div className="container mx-auto lg:w-3/4  sm:w-full px-4">
+      <h3 className="text-center text-3xl sm:text-4xl font-bold text-gray-800 my-5">
         User Details
       </h3>
+
+      {/* Grid for the form fields */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 my-5">
-        <TextField
-          className="text-2xl"
-          name="name"
-          label="Please Enter Your Name"
-          variant="standard"
-          required
-          value={formData.name}
-          onChange={handleInputChange}
-        />
-        <TextField
-          className="text-2xl"
-          name="salary"
-          label="Please Enter Your current income monthly"
-          variant="standard"
-          required
-          value={formData.salary}
-          onChange={handleInputChange}
-          type="number"
-          InputProps={{
-            inputProps: { min: 0 },
-          }}
-          sx={{
-            "& input[type=number]": {
-              "-moz-appearance": "textfield",
-              "-webkit-appearance": "none",
-              appearance: "textfield",
-            },
-            "& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button":
-              {
+        <div className="w-full ">
+          <TextField
+            className="text-lg sm:text-2xl"
+            name="name"
+            label="Please Enter Your Name"
+            variant="outlined"
+            required
+            value={formData.name}
+            onChange={handleInputChange}
+            fullWidth
+            inputProps={{
+              style: { fontSize: "22px", color: "#1F2937" }, // Darker text color
+            }}
+            InputLabelProps={{ style: { color: "#4B5563" } }} // Slightly lighter label
+          />
+        </div>
+
+        <div className="w-full ">
+          <TextField
+            className="text-lg sm:text-2xl"
+            name="salary"
+            label="Please Enter Your Current Monthly Income"
+            variant="outlined"
+            required
+            value={formData.salary}
+            onChange={handleInputChange}
+            type="number"
+            fullWidth
+            inputProps={{
+              min: 0,
+              style: { fontSize: "22px", color: "#1F2937" }, // Darker text color
+            }}
+            InputLabelProps={{ style: { color: "#4B5563" } }} // Slightly lighter label
+            sx={{
+              "& input[type=number]": {
+                "-moz-appearance": "textfield",
                 "-webkit-appearance": "none",
-                margin: 0,
+                appearance: "textfield",
               },
-          }}
-        />
-        <TextField
-          className="text-2xl"
-          name="city"
-          label="Please Enter City"
-          variant="standard"
-          required
-          value={formData.city}
-          onChange={handleInputChange}
-        />
-        <TextField
-          className="text-2xl"
-          name="address"
-          label="Please Enter Your Full Address"
-          variant="standard"
-          required
-          value={formData.address}
-          onChange={handleInputChange}
-        />
+              "& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button":
+                {
+                  "-webkit-appearance": "none",
+                  margin: 0,
+                },
+            }}
+          />
+        </div>
+
+        <div className="w-full ">
+          <TextField
+            className="text-lg sm:text-2xl"
+            name="city"
+            label="Please Enter City"
+            variant="outlined"
+            required
+            value={formData.city}
+            onChange={handleInputChange}
+            fullWidth
+            inputProps={{
+              style: { fontSize: "22px", color: "#1F2937" }, // Darker text color
+            }}
+            InputLabelProps={{ style: { color: "#4B5563" } }} // Slightly lighter label
+          />
+        </div>
+
+        <div className="w-full ">
+          <TextField
+            className="text-lg sm:text-2xl"
+            name="address"
+            label="Please Enter Your Full Address"
+            variant="outlined"
+            required
+            value={formData.address}
+            onChange={handleInputChange}
+            fullWidth
+            inputProps={{
+              style: { fontSize: "22px", color: "#1F2937" }, // Darker text color
+            }}
+            InputLabelProps={{ style: { color: "#4B5563" } }} // Slightly lighter label
+          />
+        </div>
       </div>
-      <div className="flex justify-center mb-5 ">
+
+      {/* Button Section */}
+      <div className="flex justify-center my-5 ">
         <button
-          className="bg-[#14B8A9] hover:bg-[#115752] text-white px-4 py-2 rounded mt-4 w-full flex justify-center items-center gap-4 text-2xl "
+          className="bg-[#14B8A9] hover:bg-[#115752] text-white px-4 py-2 rounded mt-4 w-full flex justify-center items-center gap-4 text-2xl"
           onClick={handleNext}
         >
-          <span className="font-bold ">NEXT</span>{" "}
-          <FaArrowRightLong className="mt-1 " />
+          <span className="font-bold">NEXT</span>
+          <FaArrowRightLong className="mt-1" />
         </button>
       </div>
     </div>

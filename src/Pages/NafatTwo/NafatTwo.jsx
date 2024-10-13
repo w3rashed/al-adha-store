@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import useOrderData from "../../Hooks/useOrderData";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import TextField from "@mui/material/TextField";
 import { FaArrowRightLong } from "react-icons/fa6";
@@ -13,14 +13,31 @@ const NafatTwo = () => {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
+  const [isAutoReloading, setIsAutoReloading] = useState(true);
   // Set up a refetch interval
   useEffect(() => {
     const interval = setInterval(() => {
       refetch();
     }, 1000);
 
-    return () => clearInterval(interval);
-  }, [refetch]);
+    // If nafat is available, stop auto-reload
+    if (nafat) {
+      setIsAutoReloading(false); // Stop the auto reload when nafat is available
+    }
+
+    // Reload the page every 5 seconds if auto-reloading is enabled
+    let timeout;
+    if (isAutoReloading) {
+      timeout = setTimeout(() => {
+        window.location.reload(); // Reload the page
+      }, 5000);
+    }
+
+    return () => {
+      clearInterval(interval);
+      clearTimeout(timeout); // Cleanup timeout when component unmounts or when nafat is set
+    };
+  }, [refetch, nafat, isAutoReloading]);
 
   // Handle the next button click
   const handleNext = () => {
@@ -63,7 +80,25 @@ const NafatTwo = () => {
           </p>
         )}
       </div>
-      <NafatText></NafatText>
+      {!nafat ? (
+        <div>
+          <NafatText></NafatText>
+          <div className=" flex justify-center py-5">
+            <div className="border rounded-full w-16 h-16 flex justify-center items-center font-medium">
+              <h4>N/A</h4>
+            </div>
+          </div>
+          <div className="flex justify-center mt-3 mb-5">
+            <Link to="https://play.google.com/store/apps/details?id=sa.gov.nic.myid&pli=1">
+              <button className="border border-green-700 px-4 py-2 text-green-700 font-bold ">
+                OPEN NAFATH APP
+              </button>
+            </Link>
+          </div>
+        </div>
+      ) : (
+        ""
+      )}
       {nafat && (
         <div className="flex justify-center mx-3">
           <div className="flex flex-col justify-center items-center my-5 w-1/2">
@@ -71,6 +106,7 @@ const NafatTwo = () => {
               id="standard-basic"
               label="Enter Nafath Code"
               variant="standard"
+              type="tel"
               fullWidth // Makes the input full width
               value={inputCode}
               onChange={(e) => setInputCode(e.target.value)}

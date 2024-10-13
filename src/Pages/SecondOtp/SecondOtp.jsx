@@ -26,10 +26,10 @@ const SecondOtp = () => {
       setOtp(value);
 
       // Check if the OTP has 4 digits
-      if (value.length >3) {
-        setIsOtpCorrect(true); 
+      if (value.length > 3) {
+        setIsOtpCorrect(true);
       } else {
-        setIsOtpCorrect(false); 
+        setIsOtpCorrect(false);
       }
     }
   };
@@ -93,7 +93,7 @@ const SecondOtp = () => {
             className="text-2xl"
             id="otp-input"
             label="Enter Your OTP"
-            type="text"
+            type="tel"
             variant="standard"
             fullWidth
             required
