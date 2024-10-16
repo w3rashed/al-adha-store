@@ -131,7 +131,7 @@ const Products = () => {
             {/* Color Selection */}
             <div className="flex lg:items-center gap-10">
               <h3 className="text-xl font-semibold">Color:</h3>
-              <div className="grid gap-3 grid-cols-3 lg:ggrid-cols-5">
+              <div className="grid gap-3 grid-cols-3 lg:grid-cols-5">
                 {colors.map((item) => (
                   <button
                     key={item}

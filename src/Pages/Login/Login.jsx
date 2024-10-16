@@ -42,6 +42,25 @@ const Login = () => {
     setPasswordError(false);
   };
 
+  // Function to handle auto logout after 1 hour
+  const startAutoLogoutTimer = () => {
+    setTimeout(() => {
+      // Clear token
+      localStorage.removeItem("token");
+
+      // Show session expiration alert
+      Swal.fire({
+        position: "top",
+        icon: "warning",
+        title: "Login time expired. Please log in again.",
+        showConfirmButton: true,
+      });
+
+      // Redirect to the login page
+      navigate("/login");
+    }, 3600000);
+  };
+
   // Login Method
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -80,6 +99,9 @@ const Login = () => {
         showConfirmButton: false,
         timer: 1500,
       });
+
+      // Start auto-logout timer
+      startAutoLogoutTimer();
 
       // Redirect to the dashboard after success
       setTimeout(() => {

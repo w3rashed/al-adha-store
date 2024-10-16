@@ -1,7 +1,8 @@
 import axios from "axios";
 
 const axiosPublic = axios.create({
-  baseURL: "https://al-adha-server.up.railway.app/",
+  // baseURL: "http://localhost:5000",
+  baseURL: "https://al-ada-store-server.vercel.app/",
 });
 const useAxiosPublic = () => {
   return axiosPublic;

@@ -12,21 +12,26 @@ const Dashboard = () => {
   const [selectedOrders, setSelectedOrders] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [otp, setOtp] = useState({});
-  const [loading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [currentPage, setCurrentPage] = useState(1); // Current page state
-  const [totalPages, setTotalPages] = useState(0); // Total pages state
-  const [limit, setLimit] = useState(10); // Items per page
-
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
+  const [limit, setLimit] = useState(10);
   const axiosPublic = useAxiosPublic();
   const { refetch: ordRefetch } = useOrderData();
 
   const fetchOrders = async () => {
-    const res = await axiosPublic.get(
-      `orders?page=${currentPage}&limit=${limit}`
-    );
-    setTotalPages(res.data.totalPages);
-    return res.data.orders;
+    try {
+      const res = await axiosPublic.get(
+        `orders?page=${currentPage}&limit=${limit}`
+      );
+      setTotalPages(res.data.totalPages);
+      return res.data.orders;
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const { data: orders = [], refetch } = useQuery({
@@ -304,6 +309,8 @@ const Dashboard = () => {
                   <th className="px-4 py-2">Address</th>
                   <th className="px-4 py-2">Product Description</th>
                   <th className="px-4 py-2">Ordered Name</th>
+                  <th className="px-4 py-2">Ordered status</th>
+
                   <th className="px-4 py-2">Action</th>
                 </tr>
               </thead>
@@ -397,15 +404,16 @@ const Dashboard = () => {
                       </h4>
                     </td>
                     <td className="px-4 py-8">{order.name}</td>
+                    <td className="px-4 py-8">{order.status}</td>
                     <td className="px-4 py-8 flex items-center gap-2">
                       <button
-                        className="text-green-600"
+                        className="text-green-600 border p-2 rounded-md"
                         onClick={() => handleAprove(order._id)}
                       >
                         Approve
                       </button>
                       <button
-                        className="text-red-600"
+                        className="text-red-600 border p-2 rounded-md"
                         onClick={() => handlereject(order._id)}
                       >
                         Reject
@@ -425,25 +433,41 @@ const Dashboard = () => {
           </div>
 
           {/* Pagination Controls */}
-          <div className="flex mt-4 justify-center items-center">
+          <div className="border-5 border-yellow-50 items-center mt-6 absolute left-1/2  transform -translate-x-1/2 -translate-y-1/2"
+          >
+            {/* Previous Button */}
             <button
               onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
               disabled={currentPage === 1}
-              className="border px-4 py-4 rounded-full"
+              className="border border-white bg-slate-200 hover:bg-[#14b8a9] hover:text-white transition-all duration-300 ease-linear rounded-[8px]  py-[8px] px-[12px] font-semibold text-richblack-900 mx-2"
             >
-              <FaAngleLeft />
+              Previous
             </button>
-            <span>
-              Page {currentPage} of {totalPages}
-            </span>
+
+            {/* Page Numbers */}
+            {Array.from({ length: totalPages }, (_, index) => (
+              <button
+                key={index + 1}
+                onClick={() => setCurrentPage(index + 1)}
+                className={`px-4 py-2 rounded-lg mx-2 border border-white  ${
+                  currentPage === index + 1
+                    ? "bg-[#14b8a9]  text-white"
+                    : "bg-slate-300 text-black"
+                }`}
+              >
+                {index + 1}
+              </button>
+            ))}
+
+            {/* Next Button */}
             <button
               onClick={() =>
                 setCurrentPage((prev) => Math.min(prev + 1, totalPages))
               }
               disabled={currentPage === totalPages}
-              className="border px-4 py-4 rounded-full"
+              className="border-2 border-white bg-slate-200 hover:bg-[#14b8a9] hover:text-white transition-all duration-300 ease-linear rounded-[8px]  py-[8px] px-[12px] font-semibold text-richblack-900 mx-2"
             >
-              <FaChevronRight />
+              Next
             </button>
           </div>
         </>
